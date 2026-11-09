@@ -3,6 +3,7 @@ import { Assets, BufferImageSource, Container, Sprite, Texture } from "pixi.js";
 import type { GameAsset } from "@/drizzle/schema";
 import type { GroundEffect, ReturnedBattle } from "@/libs/combat/types";
 import { getBattleGrid } from "@/libs/combat/util";
+import { EFFECT_ANIMATION_HEX_RATIO } from "@/libs/rendering/animation";
 import type { GameRenderer } from "@/libs/rendering/runtime";
 import { createCombatEffects } from "@/libs/rendering/scenes/combatEffects";
 import { applyEffects, expireGroundEffects } from "@/libs/combat/process";
@@ -38,7 +39,7 @@ const setup = (hexWidth = 40) => {
 };
 
 describe("Pixi combat effects", () => {
-  it.each([24, 48])("fits ground and character animations to their hex at %s world units", async (hexWidth) => {
+  it.each([24, 48])("sizes ground and character animations to their hex at %s world units", async (hexWidth) => {
     const scene = setup(hexWidth);
     scene.effect.appearAnimation = "animation";
     const target = makeBattleUser("target", { longitude: 4, latitude: 3 });
@@ -56,8 +57,8 @@ describe("Pixi combat effects", () => {
           expect(root.children).toHaveLength(2);
           for (const clip of root.children as Sprite[]) {
             const bounds = clip.getBounds();
-            expect(bounds.width).toBeCloseTo(tile.height * zoom);
-            expect(bounds.height).toBeCloseTo(tile.height * zoom);
+            expect(bounds.width).toBeCloseTo(tile.height * EFFECT_ANIMATION_HEX_RATIO * zoom);
+            expect(bounds.height).toBeCloseTo(tile.height * EFFECT_ANIMATION_HEX_RATIO * zoom);
             expect((bounds.minX + bounds.maxX) / 2).toBeCloseTo(73 + center.x * zoom);
             expect((bounds.minY + bounds.maxY) / 2).toBeCloseTo(41 - center.y * zoom);
           }
@@ -191,8 +192,8 @@ describe("authoritative combat effect transitions", () => {
     const end = scene.snapshot.battle.groundEffects[0]!;
     const tile = scene.grid.getHex({ col: end.longitude, row: end.latitude })!;
     const clip = scene.effects.container.children[0]!.children[0] as Sprite;
-    expect(clip.width).toBeCloseTo(tile.height);
-    expect(clip.height).toBeCloseTo(tile.height);
+    expect(clip.width).toBeCloseTo(tile.height * EFFECT_ANIMATION_HEX_RATIO);
+    expect(clip.height).toBeCloseTo(tile.height * EFFECT_ANIMATION_HEX_RATIO);
     for (let frame = 1; frame <= 60; frame++) scene.effects.animate(frame, false, false, null);
     expect(scene.play.mock.calls).toEqual([["disappear.wav", 0.4]]);
   });

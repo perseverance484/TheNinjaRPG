@@ -90,5 +90,5 @@ export type AnimationClip = {
   loop: boolean;
 };
 
-/** Square combat effect frames fit one hex height at every battlefield scale. */
-export const EFFECT_ANIMATION_HEX_RATIO = 1;
+/** Square effect sheets span this many hex heights, keeping their size relative to fighters. */
+export const EFFECT_ANIMATION_HEX_RATIO = 2.5;
