@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { api } from "@/app/_trpc/client";
-import { GameAssetTypes } from "@/drizzle/constants";
+import { AnimationSizes, GameAssetTypes } from "@/drizzle/constants";
 import type { GameAsset } from "@/drizzle/schema";
 import { useContentSubmit } from "@/hooks/contentSubmit";
 import { useLpcCatalogInvalidation } from "@/hooks/lpc";
 import type { FormEntry } from "@/layout/EditContent";
-import { assetTypeLabels } from "@/libs/assetLibrary";
+import { animationSizeLabels, assetTypeLabels } from "@/libs/assetLibrary";
 import { showFormErrorsToast, showMutationToast } from "@/libs/toast";
 import type { ZodGameAssetInput, ZodGameAssetType } from "@/validators/asset";
 import { gameAssetValidator } from "@/validators/asset";
@@ -134,6 +134,15 @@ export const useAssetEditForm = (asset: GameAsset, refetch: () => Promise<unknow
   if (type === "ANIMATION") {
     formData.push({ id: "frames", type: "number", label: "Number of frames" });
     formData.push({ id: "speed", type: "number", label: "Frame duration (ms)" });
+    formData.push({
+      id: "animationSize",
+      type: "db_values",
+      label: "Battlefield size",
+      values: AnimationSizes.map((size) => ({
+        id: size,
+        name: animationSizeLabels[size],
+      })),
+    });
   }
 
   // For static

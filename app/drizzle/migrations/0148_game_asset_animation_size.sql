@@ -1,0 +1,1 @@
+ALTER TABLE `GameAsset` ADD `animationSize` enum('HEX','LARGE') DEFAULT 'HEX' NOT NULL;

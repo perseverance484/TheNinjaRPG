@@ -182,6 +182,9 @@ export const gameAsset = mysqlTable(
     url: varchar("url", { length: 191 }).notNull(),
     frames: tinyint("frames").default(1).notNull(),
     speed: tinyint("speed").default(1).notNull(),
+    animationSize: mysqlEnum("animationSize", consts.AnimationSizes)
+      .default("HEX")
+      .notNull(),
     hidden: boolean("hidden").default(true).notNull(),
     folder: varchar("folder", { length: 191 }).default("").notNull(),
     createdAt: datetime("createdAt", { mode: "date", fsp: 3 })

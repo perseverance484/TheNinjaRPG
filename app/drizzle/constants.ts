@@ -78,6 +78,10 @@ export const GameAssetTypes = [
 ] as const;
 export type GameAssetType = (typeof GameAssetTypes)[number];
 
+/** Battlefield size of an animation asset: fitted inside one hex, or spanning 2.5 hex heights. */
+export const AnimationSizes = ["HEX", "LARGE"] as const;
+export type AnimationSize = (typeof AnimationSizes)[number];
+
 // Image orientations
 export const IMG_ORIENTATIONS = ["square", "portrait", "landscape"] as const;
 export type IMG_ORIENTATION = (typeof IMG_ORIENTATIONS)[number];

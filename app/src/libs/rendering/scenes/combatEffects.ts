@@ -6,7 +6,7 @@ import type { GroundEffect, ReturnedBattle, UserEffect } from "@/libs/combat/typ
 import type { TerrainHex } from "@/libs/hexgrid";
 import {
   assetAnimationClip,
-  EFFECT_ANIMATION_HEX_RATIO,
+  EFFECT_ANIMATION_HEX_RATIOS,
 } from "@/libs/rendering/animation";
 import { createSpriteClip } from "@/libs/rendering/primitives/animation";
 import { createWorldSprites } from "@/libs/rendering/primitives/sprites";
@@ -123,7 +123,7 @@ export const createCombatEffects = (
             animationScope,
             assetAnimationClip(asset, loop),
             {
-              size: tile.height * EFFECT_ANIMATION_HEX_RATIO,
+              size: tile.height * EFFECT_ANIMATION_HEX_RATIOS[asset.animationSize],
             },
           );
           if (scope.isDisposed()) return;

@@ -1,3 +1,4 @@
+import type { AnimationSize } from "@/drizzle/constants";
 import type { GameAsset } from "@/drizzle/schema";
 import type {
   CharacterAnimationState,
@@ -90,5 +91,8 @@ export type AnimationClip = {
   loop: boolean;
 };
 
-/** Square combat effect frames fit one hex height at every battlefield scale. */
-export const EFFECT_ANIMATION_HEX_RATIO = 1;
+/** Hex heights a square combat effect frame spans for each animation size, at every battlefield scale. */
+export const EFFECT_ANIMATION_HEX_RATIOS: Record<AnimationSize, number> = {
+  HEX: 1,
+  LARGE: 2.5,
+};

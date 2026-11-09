@@ -14,7 +14,7 @@ type Callbacks = {
 const asset: GameAsset = {
   lpcConfig: null,
   id: "asset", name: "Forest", type: "STATIC", image: "https://example.com/forest.webp",
-  url: "https://example.com/forest.webp", folder: "Scenes", frames: 1, speed: 50,
+  url: "https://example.com/forest.webp", folder: "Scenes", frames: 1, speed: 50, animationSize: "HEX",
   hidden: false, licenseDetails: "TNR", onInitialBattleField: false,
   createdByUserId: "creator", createdAt: new Date(0), updatedAt: new Date(0),
 };

@@ -28,7 +28,7 @@ const setup = (hexWidth = 40) => {
   scopes.push(() => stage.destroy({ children: true, texture: false, textureSource: false }));
   const prefix = `effect-${sequence++}`;
   const assets = [
-    { id: "animation", image: `https://example.com/${prefix}.png`, frames: 4, speed: 10 },
+    { id: "animation", image: `https://example.com/${prefix}.png`, frames: 4, speed: 10, animationSize: "HEX" },
     { id: "appear", url: "appear.wav" }, { id: "disappear", url: "disappear.wav" },
   ] as unknown as GameAsset[];
   const effect = { id: "effect", type: "visual", longitude: 3, latitude: 1, power: 100, staticAnimation: "animation", appearSfx: "appear", disappearSfx: "disappear" } as GroundEffect;
@@ -64,6 +64,20 @@ describe("Pixi combat effects", () => {
         }
       }
     }
+  });
+  it.each([["HEX", 1], ["LARGE", 2.5]] as const)("draws %s animations at their hex ratio, centred on the hex", async (size, ratio) => {
+    const scene = setup(48);
+    Object.assign(scene.snapshot.assets[0]!, { animationSize: size });
+    await scene.effects.sync(scene.snapshot);
+    scene.effects.animate(0, false, false, null);
+    const tile = scene.grid.getHex({ col: scene.effect.longitude, row: scene.effect.latitude })!;
+    const center = tile.corners.reduce((sum, point) => ({ x: sum.x + point.x / 6, y: sum.y + point.y / 6 }), { x: 0, y: 0 });
+    const clip = scene.effects.container.getChildByLabel(scene.effect.id)!.children[0] as Sprite;
+    const bounds = clip.getBounds();
+    expect(bounds.width).toBeCloseTo(tile.height * ratio);
+    expect(bounds.height).toBeCloseTo(tile.height * ratio);
+    expect((bounds.minX + bounds.maxX) / 2).toBeCloseTo(center.x);
+    expect((bounds.minY + bounds.maxY) / 2).toBeCloseTo(center.y);
   });
   it("keeps static barrier artwork below overlays with shared position, visibility and lifetime", async () => {
     const scene = setup();

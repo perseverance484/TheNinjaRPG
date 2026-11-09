@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GameAssetTypes } from "@/drizzle/constants";
+import { AnimationSizes, GameAssetTypes } from "@/drizzle/constants";
 import { lpcConfigValidator } from "@/validators/lpcAsset";
 
 /** Asset edit payload shared by content forms and server mutation validation. */
@@ -9,6 +9,7 @@ export const gameAssetValidator = z.object({
   image: z.url(),
   frames: z.coerce.number().int().min(1).max(100),
   speed: z.coerce.number().int().min(1).max(100),
+  animationSize: z.enum(AnimationSizes).optional(),
   type: z.enum(GameAssetTypes),
   licenseDetails: z.string().min(1).max(512),
   onInitialBattleField: z.boolean(),
