@@ -1,5 +1,5 @@
 import type { Grid } from "honeycomb-grid";
-import { Container } from "pixi.js";
+import { Container, type Sprite } from "pixi.js";
 import type { GameAsset } from "@/drizzle/schema";
 import { stillInBattle } from "@/libs/combat/inBattle";
 import { projectileTravelMs } from "@/libs/combat/projectiles";
@@ -28,6 +28,63 @@ import type { BarrierTagType } from "@/validators/combat";
 export const COMBAT_GROUND_EFFECT_Z_INDEX = 5.25;
 
 /**
+ * How one tile shows an area effect's clips. An area jutsu places the same clips on every tile
+ * it covers; its variation settings let each tile differ, chosen by a hash of the tile so every
+ * client draws the same field: mirrored on about half the tiles, started up to
+ * `animationStagger` ms late, and showing `animationAlternate` instead of the appear clip on
+ * about half the tiles. `animationRipple` adds that many ms per hex between the tile and the
+ * fighter who cast it (`hexesFromCaster`), so the clips spread outward from them. A tile waits
+ * at most `MAX_TILE_DELAY_MS` of added delay; texture loading can still hold a tile back.
+ */
+export const MAX_TILE_DELAY_MS = 2000;
+
+export const tileVariation = (
+  effect: Pick<GroundEffect, "appearAnimation"> &
+    Partial<
+      Pick<
+        GroundEffect,
+        | "animationMirror"
+        | "animationStagger"
+        | "animationRipple"
+        | "animationAlternate"
+      >
+    >,
+  col: number,
+  row: number,
+  hexesFromCaster = 0,
+) => {
+  let hash =
+    Math.imul((col | 0) + 0x632be5ab, 0x27d4eb2d) ^
+    Math.imul((row | 0) + 0x85157af5, 0x165667b1);
+  hash = Math.imul(hash ^ (hash >>> 15), 0x2c1b3c6d);
+  hash = (hash ^ (hash >>> 12)) >>> 0;
+  const stagger = Math.max(0, effect.animationStagger ?? 0);
+  return {
+    mirrored: !!effect.animationMirror && (hash & 1) === 1,
+    delayMs: Math.min(
+      MAX_TILE_DELAY_MS,
+      Math.round(((hash >>> 8) / 0x1000000) * stagger) +
+        Math.max(0, effect.animationRipple ?? 0) * hexesFromCaster,
+    ),
+    // The alternate stands in for an appear clip, so it needs one (SuperRefineEffects).
+    appearAnimation:
+      effect.appearAnimation && effect.animationAlternate && (hash & 2) === 2
+        ? effect.animationAlternate
+        : effect.appearAnimation,
+  };
+};
+
+const NO_VARIATION = { mirrored: false, delayMs: 0 };
+
+const isLive = (snapshot: CombatEffectSnapshot, id: string) =>
+  snapshot.battle.groundEffects.some((effect) => effect.id === id) ||
+  snapshot.battle.usersEffects.some((effect) => effect.id === id);
+
+const orient = (sprite: Sprite, mirrored: boolean) => {
+  sprite.scale.x = mirrored ? -Math.abs(sprite.scale.x) : Math.abs(sprite.scale.x);
+};
+
+/**
  * Static artwork stays below targeting and fighters; clips and meters stay above.
  * Effects keep identity through hidden/depleted states and retire their leases on expiry.
  */
@@ -38,8 +95,11 @@ export const createCombatEffects = (
 ) => {
   const container = new Container(),
     ground = new Container(),
-    records = new Map<string, EffectRecord>();
+    records = new Map<string, EffectRecord>(),
+    /** Effects whose arrival a combat visual played; kept while the effect is in the battle. */
+    announced = new Set<string>();
   let snapshot: CombatEffectSnapshot | null = null;
+  let cycle: number | undefined;
   let queued: { url: string; volume: number }[] = [],
     flushAt: number | null = null;
   let wasMoving = false;
@@ -54,7 +114,30 @@ export const createCombatEffects = (
     if (moving) queued.push({ url: asset.url, volume: snapshot.volume });
     else play(asset.url, snapshot.volume);
   };
+  /**
+   * Let an effect that left the battle finish its one-shot clips: its gameplay can end before
+   * a staggered tile's clip begins, or before its clips have loaded. Looping and static art
+   * leave at once. Whether any one-shot remains or may still arrive.
+   */
+  const finishOneShots = (record: EffectRecord) => {
+    record.clips = record.clips.filter((clip) => {
+      if (!clip.loop) return true;
+      clip.dispose();
+      return false;
+    });
+    record.leaving = !record.ready || record.clips.length > 0;
+    if (record.ground) record.ground.visible = false;
+    if (record.barrier) record.barrier.container.visible = false;
+    return record.leaving;
+  };
   const sync = (next: CombatEffectSnapshot, initial = false) => {
+    // A replayed preview starts over: no clip of the earlier cycle plays into the new one.
+    if (next.cycle !== cycle) {
+      for (const record of records.values()) record.scope.dispose();
+      records.clear();
+      announced.clear();
+      cycle = next.cycle;
+    }
     snapshot = next;
     // One cast can create many tiles whose artwork finishes loading on different frames.
     // Share its audio onset across those records without suppressing a later cast this round.
@@ -123,15 +206,21 @@ export const createCombatEffects = (
         (effect) => effect.id,
       ),
     );
+    // An id back in the battle while its earlier record is still finishing starts over.
     for (const [id, record] of records)
-      if (!live.has(id)) {
+      if (live.has(id) ? record.leaving : !finishOneShots(record)) {
         record.scope.dispose();
         records.delete(id);
       }
-    const displayed: { effect: GroundEffect | UserEffect; tile: TerrainHex }[] = [];
+    const displayed: {
+      effect: GroundEffect | UserEffect;
+      tile: TerrainHex;
+      /** Only ground effects vary per tile; effects on a character follow the character. */
+      onGround: boolean;
+    }[] = [];
     for (const effect of next.battle.groundEffects) {
       const tile = grid.getHex({ col: effect.longitude, row: effect.latitude });
-      if (tile) displayed.push({ effect, tile });
+      if (tile) displayed.push({ effect, tile, onGround: true });
     }
     for (const effect of next.battle.usersEffects) {
       const user = next.battle.usersState.find(
@@ -139,7 +228,7 @@ export const createCombatEffects = (
       );
       if (!user || !stillInBattle(user)) continue;
       const tile = grid.getHex({ col: user.longitude, row: user.latitude });
-      if (tile) displayed.push({ effect, tile });
+      if (tile) displayed.push({ effect, tile, onGround: false });
     }
     const boundaries = groundDecalBoundaries(
       displayed.flatMap(({ effect, tile }) =>
@@ -166,14 +255,27 @@ export const createCombatEffects = (
       ),
     );
     const visible = new Set(displayed.map((entry) => entry.effect.id));
+    // Combat spawns a visual for each arrival it shows; the announced effect then plays none,
+    // for as long as it stays in the battle (a fighter downed by the hit can return with it).
+    for (const effect of next.battle.groundEffects)
+      if (effect.arrivalFor) announced.add(effect.arrivalFor);
+    for (const id of announced) if (!live.has(id)) announced.delete(id);
+    // A cast with a projectile lands when its flights do, which already spread by distance, so
+    // no effect of that cast adds stagger or ripple to its impact.
+    const flown = new Set(
+      [...next.battle.groundEffects, ...next.battle.usersEffects].flatMap((effect) =>
+        effect.projectileAnimation ? [castPhaseKey(effect, "appear")] : [],
+      ),
+    );
+    // Effects still in the battle but not shown keep their clips for when they return.
     for (const [id, record] of records)
-      if (!visible.has(id)) {
+      if (!visible.has(id) && !record.leaving) {
         record.displayed = false;
         record.root.visible = false;
         if (record.ground) record.ground.visible = false;
       }
     const pending: Promise<unknown>[] = [];
-    for (const { effect, tile } of displayed) {
+    for (const { effect, tile, onGround } of displayed) {
       if (
         !effect.staticAssetPath &&
         !effect.staticAnimation &&
@@ -191,7 +293,23 @@ export const createCombatEffects = (
         records.delete(effect.id);
         record = undefined;
       }
+      const origin =
+        onGround && effect.castFrom
+          ? grid.getHex({
+              col: effect.castFrom.longitude,
+              row: effect.castFrom.latitude,
+            })
+          : undefined;
+      const variation = onGround
+        ? tileVariation(
+            effect,
+            tile.col,
+            tile.row,
+            origin ? grid.distance(origin, tile) : 0,
+          )
+        : { ...NO_VARIATION, appearAnimation: effect.appearAnimation };
       if (!record) {
+        const arrivalShown = announced.has(effect.id);
         const onsetSfx = effect.projectileOnly ? undefined : effect.appearSfx;
         const scope = createRenderScope(game),
           root = new Container();
@@ -213,9 +331,19 @@ export const createCombatEffects = (
           ready: false,
           displayed: true,
           events:
-            !initial && next.sound && onsetSfx
+            !initial && !arrivalShown && next.sound && onsetSfx
               ? [soundEvent(effect, onsetSfx, effect.soundOrigin?.phase ?? "appear")]
               : [],
+          leaving: false,
+          mirrored: variation.mirrored,
+          // Effects already on the board when a battle loads show at once; only arrivals stagger.
+          // Disappear visuals keep their variation; no flight precedes them.
+          delayMs:
+            initial ||
+            (effect.soundOrigin?.phase !== "disappear" &&
+              flown.has(castPhaseKey(effect, "appear")))
+              ? 0
+              : variation.delayMs,
           depleted: false,
           barrier: null,
           decal: null,
@@ -259,6 +387,7 @@ export const createCombatEffects = (
             tile.width / 2,
             tile.height * (0.5 + (effect.animationOffsetY ?? 0)),
           );
+          orient(clip.sprite, current.mirrored);
           clip.sprite.zIndex = loop ? 2 : 1;
           if (effect.groundStyle === "SURFACE") {
             clip.sprite.alpha = effect.groundOpacity ?? 1;
@@ -352,7 +481,8 @@ export const createCombatEffects = (
             }),
           );
         if (!effect.projectileOnly) {
-          if (!initial) loads.push(addClip(effect.appearAnimation, false));
+          if (!initial && !arrivalShown)
+            loads.push(addClip(variation.appearAnimation, false));
           loads.push(addClip(effect.staticAnimation, true));
         }
         pending.push(
@@ -362,6 +492,11 @@ export const createCombatEffects = (
               if (result.status === "rejected")
                 console.warn("Combat effect unavailable", result.reason);
             current.ready = true;
+            // An effect that left the battle while loading keeps only its one-shot clips.
+            if (current.leaving && !finishOneShots(current)) {
+              scope.dispose();
+              records.delete(effect.id);
+            }
             game.invalidate();
           }),
         );
@@ -383,6 +518,11 @@ export const createCombatEffects = (
       if (record.outerEdges) record.decal?.setOuterEdges(record.outerEdges);
       record.effect = effect;
       record.tile = tile;
+      // A ground effect that moves takes its new tile's orientation; timing has already begun.
+      if (variation.mirrored !== record.mirrored) {
+        record.mirrored = variation.mirrored;
+        for (const clip of record.clips) orient(clip.sprite, record.mirrored);
+      }
       const depleted = effect.power !== undefined && effect.power <= 0;
       if (depleted && !record.depleted && !initial && next.sound && effect.disappearSfx)
         record.events.push(soundEvent(effect, effect.disappearSfx, "disappear"));
@@ -435,20 +575,43 @@ export const createCombatEffects = (
       }
       record.events.length = 0;
       record.root.visible = record.displayed && !record.depleted;
-      if (record.ground) record.ground.visible = record.root.visible;
+      // A departing effect hides its ground art, but SURFACE clips sit on the ground layer
+      // and finish there.
+      if (record.ground)
+        record.ground.visible =
+          record.root.visible &&
+          (!record.leaving || record.effect.groundStyle === "SURFACE");
+      if (record.decal) record.decal.visible = !record.leaving;
+      // A staggered tile holds its clips back until its own start; reduced motion starts all at once.
+      const elapsed =
+        now - (record.startedAt ?? now) - (reducedMotion ? 0 : record.delayMs);
       record.clips = record.clips.filter((clip) => {
-        if (!clip.renderAt(now - (record.startedAt ?? now), reducedMotion).finished)
+        if (elapsed < 0) {
+          clip.sprite.visible = false;
           return true;
+        }
+        if (!clip.renderAt(elapsed, reducedMotion).finished) return true;
         clip.dispose();
         return false;
       });
+      if (record.leaving && !record.clips.length) {
+        record.leaving = false;
+        record.displayed = false;
+        record.root.visible = false;
+        if (!snapshot || !isLive(snapshot, id)) {
+          record.scope.dispose();
+          records.delete(id);
+          continue;
+        }
+      }
       for (const clip of record.clips) {
         if (!clip.loop) playing = true;
         else if (record.root.visible)
           loopFrameRate = Math.max(loopFrameRate, clip.frameRate);
       }
       if (record.barrier) {
-        record.barrier.container.visible = record.root.visible && hoveredId === id;
+        record.barrier.container.visible =
+          record.root.visible && !record.leaving && hoveredId === id;
         const barrier = record.effect as BarrierTagType;
         record.barrier.set(barrier.curHealth / barrier.maxHealth);
       }
@@ -459,7 +622,8 @@ export const createCombatEffects = (
       for (let index = layer.children.length - 1; index >= 0; index--) {
         const root = layer.children[index],
           record = root && records.get(root.label);
-        if (!root || !record || !isObjectChainVisible(root)) continue;
+        // A departing effect finishes its clips but no longer takes the pointer.
+        if (!root || !record || record.leaving || !isObjectChainVisible(root)) continue;
         if (root.getBounds().containsPoint(x, y))
           return { id: record.effect.id, tile: record.tile };
       }
@@ -502,6 +666,11 @@ export type CombatEffectSnapshot = {
   assets: GameAsset[];
   sound: boolean;
   volume: number;
+  /**
+   * A replayed preview's cycle. When it changes, the earlier cycle's effects leave at once,
+   * without finishing their one-shot clips over the new cycle.
+   */
+  cycle?: number;
 };
 type EffectRecord = {
   scope: GameRenderer;
@@ -525,4 +694,10 @@ type EffectRecord = {
     to: { x: number; y: number };
     duration: number;
   } | null;
+  /** Its effect is gone; one-shot clips still waiting or playing finish before it hides. */
+  leaving: boolean;
+  /** Clips are drawn mirrored on this tile (tileVariation). */
+  mirrored: boolean;
+  /** This tile starts its clips this long after the effect appears (tileVariation). */
+  delayMs: number;
 };

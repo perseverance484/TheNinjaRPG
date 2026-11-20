@@ -95,6 +95,35 @@ describe("linked jutsu reskin inheritance", () => {
       expect(child.power).toBe(99);
     },
   );
+  it("inherits area variation as a cosmetic, defaulting reskins that predate it", () => {
+    const varied = DamageTag.parse({
+      animationMirror: true,
+      animationStagger: 300,
+      animationRipple: 60,
+      animationAlternate: "alternate",
+    });
+    const legacy = { ...DamageTag.parse({}) };
+    for (const key of [
+      "animationMirror",
+      "animationStagger",
+      "animationRipple",
+      "animationAlternate",
+    ] as const)
+      delete (legacy as Partial<typeof legacy>)[key];
+    expect(inheritJutsuReskinEffects([legacy], [varied])[0]).toMatchObject({
+      animationMirror: true,
+      animationStagger: 300,
+      animationRipple: 60,
+      animationAlternate: "alternate",
+    });
+    expect(inheritJutsuReskinEffects([varied], [legacy])[0]).toMatchObject({
+      animationMirror: false,
+      animationStagger: 0,
+      animationRipple: 0,
+      animationAlternate: "",
+    });
+    expect(inheritJutsuReskinEffects([varied], [])[0]?.animationStagger).toBe(300);
+  });
   it("uses linked cosmetics without copying hidden status, rank, identity or mechanics", () => {
     const resolved = applyLinkedJutsuReskin(base, variant);
     expect(resolved).toMatchObject({

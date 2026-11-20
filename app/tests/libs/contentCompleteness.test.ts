@@ -42,6 +42,9 @@ describe("effect asset checks", () => {
       true,
     );
     expect(hasInvalidEffectAssets([effect({ appearSfx: "gone" })], assets)).toBe(false);
+    expect(
+      hasInvalidEffectAssets([effect({ animationAlternate: "gone" })], assets),
+    ).toBe(true);
   });
 });
 

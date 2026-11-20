@@ -823,6 +823,10 @@ export type BattleEffect = ZodAllTags & {
   highestGenerals?: (typeof GenNames)[number][];
   longitude: number;
   latitude: number;
+  /** Tile of the fighter whose action placed this ground effect; its clips can ripple out from here. */
+  castFrom?: { longitude: number; latitude: number };
+  /** On the visual combat spawns for an effect's arrival: the id of that effect. */
+  arrivalFor?: string;
   barrierAbsorb: number;
   actionId: string;
   /**

@@ -37,8 +37,10 @@ import * as toastHelpers from "@/libs/toast";
 import * as errorUtils from "@/utils/error";
 import {
   DamageTag,
+  DecreaseGatheringTime,
   getTagSchema,
   HealTag,
+  IncreaseReskinSlots,
   ItemValidator,
   JutsuValidatorRawSchema,
   NonCombatConsumeRewardTag,
@@ -1513,6 +1515,97 @@ describe("effect drafts", () => {
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
   });
 
+  it.each([
+    ["Animation stagger (ms, 0–1000)", "animationStagger", 250, [1001, -1]],
+    ["Animation ripple (ms per hex from caster, 0–300)", "animationRipple", 120, [301]],
+  ] as const)(
+    "edits %s, keeping invalid drafts out of Save",
+    async (label, field, valid, invalid) => {
+      const onChange = vi.fn();
+      const initial = [DamageTag.parse({})];
+      const Fixture = () => {
+        const [effects, setEffects] = useState<ZodAllTags[]>(initial);
+        return (
+          <>
+            <EffectFormWrapper
+              type="jutsu"
+              idx={0}
+              tag={effects[0]!}
+              effects={effects}
+              setEffects={(next) => {
+                onChange(next);
+                setEffects(next);
+              }}
+              availableTags={["damage"]}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (JutsuValidatorRawSchema.shape.effects.safeParse(effects).success)
+                  void save({ id: "timing", data: { effects } });
+              }}
+            >
+              Save timing
+            </button>
+          </>
+        );
+      };
+      const view = render(<Fixture />);
+      const input = view.getByLabelText(label) as HTMLInputElement;
+      expect(input.value).toBe("0");
+      fireEvent.input(input, { target: { value: String(valid) } });
+      await waitFor(() =>
+        expect(onChange.mock.calls.at(-1)?.[0][0]?.[field]).toBe(valid),
+      );
+      for (const value of invalid) {
+        fireEvent.input(input, { target: { value: String(value) } });
+        await waitFor(() =>
+          expect(onChange.mock.calls.at(-1)?.[0][0]?.[field]).toBe(value),
+        );
+        fireEvent.click(view.getByRole("button", { name: "Save timing" }));
+        expect(save).not.toHaveBeenCalled();
+      }
+      fireEvent.input(input, { target: { value: String(valid) } });
+      fireEvent.click(view.getByRole("button", { name: "Save timing" }));
+      await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
+    },
+  );
+
+  it("picks the alternate appear animation from the asset dialog", () => {
+    const view = render(
+      <EffectFormWrapper
+        type="jutsu"
+        idx={0}
+        tag={DamageTag.parse({})}
+        effects={[DamageTag.parse({})]}
+        setEffects={vi.fn()}
+        availableTags={["damage"]}
+      />,
+    );
+    const label = view.getByText("Alternate appear animation");
+    const item = label.closest("div")!.parentElement!;
+    expect(item.textContent).toContain("Pick from dialog");
+  });
+
+  it("previews the chosen alternate appear animation", () => {
+    const query = vi.spyOn(names, "useQuery");
+    const tag = DamageTag.parse({ animationAlternate: "alternate-animation" });
+    render(
+      <EffectFormWrapper
+        type="jutsu"
+        idx={0}
+        tag={tag}
+        effects={[tag]}
+        setEffects={vi.fn()}
+        availableTags={["damage"]}
+      />,
+    );
+    expect(query.mock.calls as unknown[][]).toContainEqual([
+      { assetIds: ["alternate-animation"] },
+      { enabled: true },
+    ]);
+  });
+
   describe("MassEffectEditor selects", () => {
     const mount = (selectedFields: string[]) =>
       render(
@@ -1548,6 +1641,95 @@ describe("effect drafts", () => {
       );
       await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
       expect(save.mock.calls[0]?.[0].data.effects[0]).toMatchObject({ target: "SELF" });
+    });
+
+    it("offers animations for the alternate appear animation", async () => {
+      const assets = vi.spyOn(names, "useQuery").mockReturnValue({
+        data: [
+          { id: "alternate-animation", type: "ANIMATION" },
+          { id: "still-image", type: "STATIC" },
+        ],
+      } as never);
+      const view = mount(["animationAlternate"]);
+      fireEvent.click(view.getByRole("combobox", { name: "animationAlternate" }));
+      expect(
+        await view.findByRole("option", { name: "alternate-animation" }),
+      ).toBeDefined();
+      expect(view.queryByRole("option", { name: "still-image" })).toBeNull();
+      assets.mockRestore();
+    });
+
+    it("clears the alternate appear animation with None", async () => {
+      const assets = vi.spyOn(names, "useQuery").mockReturnValue({
+        data: [{ id: "alternate-animation", type: "ANIMATION" }],
+      } as never);
+      const view = render(
+        <MassEffectEditor
+          kind="item"
+          entries={[
+            {
+              id: "first",
+              name: "First",
+              effects: [
+                DamageTag.parse({
+                  appearAnimation: "alternate-animation",
+                  animationAlternate: "alternate-animation",
+                }),
+              ],
+              updatedAt: new Date(),
+            },
+          ]}
+          selectedFields={["animationAlternate"]}
+        />,
+      );
+      fireEvent.click(view.getByRole("combobox", { name: "animationAlternate" }));
+      fireEvent.click(await view.findByRole("option", { name: "None" }));
+      fireEvent.click(
+        view.getByRole("button", { name: "Save item effects for First" }),
+      );
+      await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
+      expect(save.mock.calls[0]?.[0].data.effects[0]).toMatchObject({
+        animationAlternate: "",
+      });
+      assets.mockRestore();
+    });
+
+    it("shows battle-only columns as not applicable on out-of-battle effects", () => {
+      const view = render(
+        <MassEffectEditor
+          kind="item"
+          entries={[
+            {
+              id: "reskins",
+              name: "Reskins",
+              effects: [IncreaseReskinSlots.parse({})],
+              updatedAt: new Date(),
+            },
+          ]}
+          selectedFields={["animationStagger", "animationAlternate"]}
+        />,
+      );
+      expect(view.queryByRole("combobox", { name: "animationAlternate" })).toBeNull();
+      expect(view.getAllByText("N/A")).toHaveLength(2);
+    });
+
+    it("shows battle-only columns as not applicable on activity bonuses", () => {
+      const view = render(
+        <MassEffectEditor
+          kind="item"
+          entries={[
+            {
+              id: "gathering",
+              name: "Gathering",
+              effects: [DecreaseGatheringTime.parse({})],
+              updatedAt: new Date(),
+            },
+          ]}
+          selectedFields={["animationStagger", "animationAlternate"]}
+        />,
+      );
+      expect(view.queryByRole("combobox", { name: "animationAlternate" })).toBeNull();
+      expect(view.getAllByText("N/A")).toHaveLength(2);
     });
 
     it("offers long animation names in a popover wider than a narrow cell", async () => {
@@ -2826,6 +3008,7 @@ describe("schema-derived field visibility", () => {
         "Static asset path",
         "Static animation",
         "Appear animation",
+        "Alternate appear animation",
         "Disappear animation",
         "Projectile animation",
         "Animation scale (1–3×)",
@@ -2834,6 +3017,9 @@ describe("schema-derived field visibility", () => {
         "Ground style",
         "Ground opacity",
         "Ground feather",
+        "Animation mirror",
+        "Animation stagger (ms, 0–1000)",
+        "Animation ripple (ms per hex from caster, 0–300)",
         "Appear sfx",
         "Disappear sfx",
         "Primary appearance sound for this cast",
@@ -2862,6 +3048,7 @@ describe("schema-derived field visibility", () => {
         "Static asset path",
         "Static animation",
         "Appear animation",
+        "Alternate appear animation",
         "Disappear animation",
         "Projectile animation",
         "Animation scale (1–3×)",
@@ -2870,6 +3057,9 @@ describe("schema-derived field visibility", () => {
         "Ground style",
         "Ground opacity",
         "Ground feather",
+        "Animation mirror",
+        "Animation stagger (ms, 0–1000)",
+        "Animation ripple (ms per hex from caster, 0–300)",
         "Appear sfx",
         "Disappear sfx",
         "Primary appearance sound for this cast",
@@ -2923,6 +3113,20 @@ describe("schema-derived field visibility", () => {
         "Description",
       ],
     ],
+    [
+      "noncombatincreasereskins",
+      "item",
+      [
+        "Type",
+        "Appear sfx",
+        "Disappear sfx",
+        "Power",
+        "Power per level",
+        "Rank",
+        "Description",
+      ],
+    ],
+    ["increasejutsuslots", "item", ["Type", "Additional jutsu slots", "Description"]],
     [
       "rollsagemode",
       "item",

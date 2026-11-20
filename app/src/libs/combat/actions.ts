@@ -1131,6 +1131,7 @@ export const insertAction = (info: {
           effect.fromType = action.type;
           effect.longitude = effectTile.col;
           effect.latitude = effectTile.row;
+          effect.castFrom = { longitude: user.longitude, latitude: user.latitude };
           groundEffects.push({ ...effect });
           if (
             target &&

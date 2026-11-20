@@ -354,6 +354,7 @@ const MEDIA_KEYS = [
   "staticAssetPath",
   "staticAnimation",
   "appearAnimation",
+  "animationAlternate",
   "projectileAnimation",
   "disappearAnimation",
   "appearSfx",
@@ -364,6 +365,9 @@ const MEDIA_KEYS = [
 const PRESENTATION_KEYS = [
   ...MEDIA_KEYS,
   "animationScale",
+  "animationMirror",
+  "animationStagger",
+  "animationRipple",
   "projectileScale",
   "animationOffsetY",
   "groundStyle",

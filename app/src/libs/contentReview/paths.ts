@@ -99,6 +99,7 @@ const MEDIA_FIELDS: Record<ContentProposalMediaKind, readonly string[]> = {
   SFX: ["appearSfx", "disappearSfx"],
   ANIMATION: [
     "appearAnimation",
+    "animationAlternate",
     "staticAnimation",
     "disappearAnimation",
     "projectileAnimation",

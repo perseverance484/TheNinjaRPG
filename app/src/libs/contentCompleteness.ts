@@ -35,6 +35,7 @@ export const hasInvalidEffectAssets = (
     [
       e.appearAnimation,
       e.projectileAnimation,
+      e.animationAlternate,
       e.disappearAnimation,
       e.staticAnimation,
       e.staticAssetPath,

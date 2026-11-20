@@ -130,6 +130,37 @@ describe("battlefieldSceneOf", () => {
       expect(scene?.effects[0]?.animationScale).toBe(1);
     },
   );
+  it("carries tile variation, so a variation-only change alters the scene", () => {
+    const base = { target: "GROUND", effects: [tag({ appearAnimation: "hit" })] };
+    const varied = {
+      ...base,
+      effects: [
+        {
+          ...tag({ appearAnimation: "hit" }),
+          animationMirror: true,
+          animationStagger: 300,
+          animationRipple: 60,
+          animationAlternate: "other",
+        },
+      ],
+    };
+    const before = battlefieldSceneOf("JUTSU", "v", base);
+    const after = battlefieldSceneOf("JUTSU", "v", varied);
+    expect(after).not.toEqual(before);
+    expect(after?.effects[0]).toMatchObject({
+      animationMirror: true,
+      animationStagger: 300,
+      animationRipple: 60,
+      animationAlternate: "other",
+    });
+    expect(sceneAssetIds(after)).toEqual(["hit", "other"]);
+    // Drafts the editor rejects draw without delay.
+    const draft = battlefieldSceneOf("JUTSU", "v", {
+      ...base,
+      effects: [{ ...tag({ appearAnimation: "hit" }), animationStagger: 1.5 }],
+    });
+    expect(draft?.effects[0]?.animationStagger).toBe(0);
+  });
   it("puts a user-targeted jutsu's tags on the target and SELF tags on the caster", () => {
     const scene = battlefieldSceneOf("JUTSU", "j1", {
       target: "OTHER_USER",

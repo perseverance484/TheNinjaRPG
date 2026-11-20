@@ -821,5 +821,7 @@ export type CombatSceneSnapshot = {
   inspect: boolean;
   /** Change for in-place preview edits that preserve battle identity/version. */
   revision?: number;
+  /** A new preview cycle starts the effects over (combatEffects). */
+  cycle?: number;
   targetTiles?: TerrainHex[];
 };

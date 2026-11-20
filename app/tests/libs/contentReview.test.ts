@@ -177,6 +177,7 @@ describe("audit rules", () => {
     expect(isMediaPath("SFX", "effects.1.projectileAnimation")).toBe(false);
     expect(isMediaPath("SFX", "effects.1.staticSfx")).toBe(false);
     expect(isMediaPath("SFX", "effects.1.projectileSfx")).toBe(false);
+    expect(isMediaPath("ANIMATION", "effects.1.animationAlternate")).toBe(true);
     expect(isMediaPath("IMAGE", "image")).toBe(true);
   });
 

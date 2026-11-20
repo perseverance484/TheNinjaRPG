@@ -176,8 +176,37 @@ export const checkFriendlyFire = (
   return false;
 };
 
+/** Tile variation an effect's appear and disappear visuals keep from the effect. */
+type TileVariation = Partial<
+  Pick<
+    BattleEffect,
+    | "animationMirror"
+    | "animationStagger"
+    | "animationRipple"
+    | "animationAlternate"
+    | "castFrom"
+  >
+>;
+
 /**
- * Create a visual effect with a specified appearAnimation and optional SFX
+ * Disappear visuals keep the effect's tile variation; the alternate clip stands in for the
+ * appear animation only.
+ */
+const disappearing = ({
+  animationMirror,
+  animationStagger,
+  animationRipple,
+  castFrom,
+}: TileVariation): TileVariation => ({
+  animationMirror,
+  animationStagger,
+  animationRipple,
+  castFrom,
+});
+
+/**
+ * Create a visual effect with a specified appearAnimation and optional SFX. An appear visual
+ * names the effect it announces (`arrivalFor`), so that effect plays no arrival of its own.
  */
 const getVisualOrSound = (
   longitude: number,
@@ -188,6 +217,8 @@ const getVisualOrSound = (
   animationScale = 1,
   source?: GroundEffect | UserEffect,
   phase: "appear" | "disappear" = "appear",
+  variation: TileVariation = {},
+  arrivalFor?: string,
 ): GroundEffect => {
   const presentation = {
     projectileAnimation: phase === "appear" ? source?.projectileAnimation : undefined,
@@ -210,6 +241,10 @@ const getVisualOrSound = (
       description: "N/A",
       appearAnimation: animation,
       animationScale,
+      animationMirror: variation.animationMirror,
+      animationStagger: variation.animationStagger,
+      animationRipple: variation.animationRipple,
+      animationAlternate: variation.animationAlternate,
       appearSfx: sfx ?? "",
       createdAt: Date.now(),
     }),
@@ -227,6 +262,8 @@ const getVisualOrSound = (
     id: nanoid(),
     createdRound: round,
     creatorId: source?.creatorId ?? nanoid(),
+    ...(variation.castFrom ? { castFrom: variation.castFrom } : {}),
+    ...(arrivalFor ? { arrivalFor } : {}),
     level: 0,
     barrierAbsorb: 0,
     isNew: true,
@@ -331,6 +368,7 @@ export const expireGroundEffects = (battle: CompleteBattle, actionRounds: number
           effect.animationScale,
           { ...effect, creatorId },
           "disappear",
+          disappearing(effect),
         ),
       );
     return false;
@@ -913,6 +951,9 @@ const applyGroundEffects = ({
             round,
             e.animationScale,
             { ...e, creatorId },
+            "appear",
+            e,
+            e.id,
           ),
         );
         if (e.type === "clone" || e.type === "summon") {
@@ -937,6 +978,7 @@ const applyGroundEffects = ({
             e.animationScale,
             { ...e, creatorId: presentationCreatorId },
             "disappear",
+            disappearing(e),
           ),
         );
       }
@@ -1788,11 +1830,12 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
     actionEffects.push(info);
   }
 
-  // Ground casts own their appearance; direct user arrivals stay at the hit coordinates.
+  // Ground casts own their appearance; direct user arrivals stay at the hit coordinates. A
+  // ground effect forwarded onto a fighter already shows its clips and sounds on its tile.
   if (
     (effect.appearAnimation || effect.appearSfx || effect.projectileAnimation) &&
-    !effect.fromGround &&
     effect.isNew &&
+    !effect.fromGround &&
     longitude !== undefined &&
     latitude !== undefined
   ) {
@@ -1805,6 +1848,10 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
         battle.round,
         effect.animationScale,
         effect,
+        "appear",
+        // A character effect's visuals play on that character, so they vary with no tile.
+        {},
+        effect.id,
       ),
     );
     if (effect.type === "visual") {
@@ -1820,6 +1867,7 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
     newUsersEffects.push(effect);
   } else if (
     (effect.disappearAnimation || effect.disappearSfx) &&
+    !effect.fromGround &&
     longitude !== undefined &&
     latitude !== undefined
   ) {

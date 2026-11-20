@@ -69,6 +69,10 @@ export const battlefieldSceneOf = (
             Number.isFinite(tag.projectileScale)
               ? Math.max(0.25, Math.min(3, tag.projectileScale))
               : 1,
+          animationMirror: tag.animationMirror === true,
+          animationStagger: wholeWithin(tag.animationStagger, 1000),
+          animationRipple: wholeWithin(tag.animationRipple, 300),
+          animationAlternate: text(tag.animationAlternate),
           animationOffsetY:
             typeof tag.animationOffsetY === "number" &&
             Number.isFinite(tag.animationOffsetY)
@@ -123,6 +127,7 @@ export const sceneAssetIds = (scene: BattlefieldScene | null) => [
         effect.staticAssetPath,
         effect.staticAnimation,
         effect.appearAnimation,
+        effect.animationAlternate ?? "",
         effect.projectileAnimation ?? "",
         effect.disappearAnimation,
       ].filter(Boolean),
@@ -190,6 +195,12 @@ const assetScene = (
 
 const text = (value: unknown) => (typeof value === "string" ? value : "");
 
+/** A whole number of milliseconds within 0..max, or 0 for a draft the editor rejects. */
+const wholeWithin = (value: unknown, max: number) =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= max
+    ? value
+    : 0;
+
 /**
  * Width of the combat canvas the battlefield preview reproduces. The combat view fills the
  * main column, which is 688 px wide on any desktop and 370 px on a 390 px wide phone.
@@ -221,6 +232,11 @@ export type BattlefieldEffect = {
   appearSfxPrimary?: boolean;
   disappearSfxPrimary?: boolean;
   animationScale?: number;
+  /** Tile variation of a ground effect's clips (combatEffects.tileVariation). */
+  animationMirror?: boolean;
+  animationStagger?: number;
+  animationRipple?: number;
+  animationAlternate?: string;
   projectileScale?: number;
   animationOffsetY?: number;
   placement: BattlefieldPlacement;

@@ -11,6 +11,7 @@ export const combatEffectRenditions = (
       | "groundStyle"
       | "staticAnimation"
       | "appearAnimation"
+      | "animationAlternate"
       | "disappearAnimation"
       | "projectileAnimation"
     >
@@ -26,6 +27,7 @@ export const combatEffectRenditions = (
       [
         effect.staticAnimation,
         effect.appearAnimation,
+        effect.animationAlternate,
         effect.disappearAnimation,
         effect.projectileAnimation,
       ].includes(asset.id)

@@ -30,6 +30,7 @@ import {
   type CombatSceneSnapshot,
   createCombatScene,
 } from "@/libs/rendering/scenes/combat";
+import { tileVariation } from "@/libs/rendering/scenes/combatEffects";
 import { reportRendererFailure } from "@/libs/rendering/telemetry";
 import { playPreloadedAudio, preloadAudioBuffers, savedSfxVolume } from "@/utils/audio";
 import { isBunnyCdnUrl, textureImageUrl, transformImageUrl } from "@/utils/image";
@@ -171,10 +172,75 @@ export const createBattlefieldPreview = async (
         return asset ? asset.frames * asset.speed : 0;
       }),
     );
-  const appearMs = durationOf(content.effects.map((effect) => effect.appearAnimation));
-  const disappearMs = durationOf(
-    content.effects.map((effect) => effect.disappearAnimation),
+  const casterTile = grid.getHex(placements.caster);
+  const castFrom = {
+    longitude: placements.caster.col,
+    latitude: placements.caster.row,
+  };
+  // As in combat, a cast with a projectile on the board lands its impacts with the flights;
+  // a projectile tag whose pattern places no tile is not part of the battle.
+  const flown = content.effects.some(
+    (effect) => !!effect.projectileAnimation && effectTiles(effect).length > 0,
   );
+  /** Delay before a placed ground tile's clips start, as the renderer applies it. */
+  const tileDelayMs = (effect: BattlefieldEffect, tile: { col: number; row: number }) =>
+    tileVariation(
+      effect,
+      tile.col,
+      tile.row,
+      casterTile ? grid.distance(casterTile, tile) : 0,
+    ).delayMs;
+  /**
+   * When each tile's arrival or exit clip plays, from the start of its phase: ground tiles
+   * vary as combat varies them (an exit takes no alternate; a cast with a projectile lands
+   * its impacts with the flights), and clips on a fighter start together.
+   */
+  const clipWindows = (phase: "appear" | "disappear") =>
+    content.effects.flatMap((effect) => {
+      const clipOf = (id: string) => ({ start: 0, duration: durationOf([id]) });
+      const base =
+        phase === "appear" ? effect.appearAnimation : effect.disappearAnimation;
+      const windows =
+        effect.placement !== "ground"
+          ? [clipOf(base)]
+          : effectTiles(effect).map((tile) => {
+              const variation = tileVariation(
+                phase === "appear" ? effect : { ...effect, animationAlternate: "" },
+                tile.col,
+                tile.row,
+                casterTile ? grid.distance(casterTile, tile) : 0,
+              );
+              return {
+                start: phase === "appear" && flown ? 0 : variation.delayMs,
+                duration: durationOf([
+                  phase === "appear" ? variation.appearAnimation : base,
+                ]),
+              };
+            });
+      return windows.filter((window) => window.duration > 0);
+    });
+  const appearWindows = clipWindows("appear");
+  const disappearWindows = clipWindows("disappear");
+  const phaseMs = (windows: { start: number; duration: number }[]) =>
+    Math.max(0, ...windows.map((window) => window.start + window.duration));
+  /** The first clip to play in a phase, the longest of those starting together. */
+  const firstWindow = (windows: { start: number; duration: number }[]) =>
+    [...windows].sort((a, b) => a.start - b.start || b.duration - a.duration)[0];
+  const appearMs = phaseMs(appearWindows);
+  const disappearMs = phaseMs(disappearWindows);
+  /** When the last delayed ground loop starts playing. */
+  const loopStartMs = flown
+    ? 0
+    : Math.max(
+        0,
+        ...content.effects
+          .filter((effect) => effect.placement === "ground" && !!effect.staticAnimation)
+          .flatMap((effect) =>
+            effectTiles(effect).map((tile) => tileDelayMs(effect, tile)),
+          ),
+      );
+  /** Every arrival clip has played and every loop has started. */
+  const settledMs = Math.max(appearMs, loopStartMs);
   const flightTiles = (effect: BattlefieldEffect) =>
     effect.projectileAnimation && effect.placement !== "caster"
       ? effectTiles(effect).filter(
@@ -193,7 +259,7 @@ export const createBattlefieldPreview = async (
       ),
     ),
   );
-  const endAt = travelMs + appearMs + (options.holdMs ?? 1800),
+  const endAt = travelMs + settledMs + (options.holdMs ?? 1800),
     restartAt = endAt + disappearMs + REST_MS;
   const controller = new AbortController();
   const abort = () => controller.abort();
@@ -226,7 +292,7 @@ export const createBattlefieldPreview = async (
     );
     battle.groundEffects = placed
       .filter(({ placement }) => placement === "ground")
-      .map(({ effect }) => effect);
+      .map(({ effect }) => ({ ...effect, castFrom }));
     battle.usersEffects = placed.flatMap(({ effect, placement }): UserEffect[] => {
       return placement !== "ground"
         ? [{ ...effect, targetId: placement === "caster" ? casterId : targetId }]
@@ -272,9 +338,18 @@ export const createBattlefieldPreview = async (
                 groundStyle: effect.groundStyle,
                 groundOpacity: effect.groundOpacity,
                 groundFeather: effect.groundFeather,
+                // Only ground exits vary per tile; a fighter's exit follows the fighter.
+                ...(effect.placement === "ground"
+                  ? {
+                      animationMirror: effect.animationMirror,
+                      animationStagger: effect.animationStagger,
+                      animationRipple: effect.animationRipple,
+                    }
+                  : {}),
               },
               casterId,
               "disappear",
+              effect.placement === "ground" ? castFrom : undefined,
             ),
           )
         : [],
@@ -303,6 +378,7 @@ export const createBattlefieldPreview = async (
     showGridNumbers: !!options.targeting,
     inspect: false,
     revision,
+    cycle,
     targetTiles: selectedTiles,
   });
   const requestedIds = new Set(assets.map((asset) => asset.id));
@@ -389,7 +465,7 @@ export const createBattlefieldPreview = async (
         phase:
           clockMs < travelMs
             ? "travel"
-            : clockMs < travelMs + appearMs
+            : clockMs < travelMs + settledMs
               ? "appearance"
               : clockMs < endAt
                 ? "active"
@@ -454,6 +530,9 @@ export const createBattlefieldPreview = async (
         live = false;
         begin();
         await renderer.renderAt(0);
+        // Captures fall inside a clip that is playing, whatever its tile's delay.
+        const appearClip = firstWindow(appearWindows);
+        const disappearClip = firstWindow(disappearWindows);
         const points = [
           ...(travelMs
             ? [
@@ -461,18 +540,29 @@ export const createBattlefieldPreview = async (
                 { at: travelMs * 0.7, label: "projectile · arriving" },
               ]
             : []),
-          ...(appearMs > 0
+          ...(appearClip
             ? [
-                { at: travelMs + appearMs * 0.3, label: "appearing" },
-                { at: travelMs + appearMs * 0.7, label: "appearing" },
+                {
+                  at: travelMs + appearClip.start + appearClip.duration * 0.3,
+                  label: "appearing",
+                },
+                {
+                  at: travelMs + appearClip.start + appearClip.duration * 0.7,
+                  label: "appearing",
+                },
               ]
             : []),
           {
-            at: Math.min(travelMs + appearMs + 350, endAt - FRAME_MS),
+            at: Math.min(travelMs + settledMs + 350, endAt - FRAME_MS),
             label: "active",
           },
-          ...(disappearMs > 0
-            ? [{ at: endAt + disappearMs * 0.5, label: "disappearing" }]
+          ...(disappearClip
+            ? [
+                {
+                  at: endAt + disappearClip.start + disappearClip.duration * 0.5,
+                  label: "disappearing",
+                },
+              ]
             : []),
         ];
         const area = {
@@ -672,6 +762,7 @@ const visualEffect = (
   visuals: Partial<Omit<BattlefieldEffect, "placement">>,
   creatorId: string,
   phase: "appear" | "disappear" = "appear",
+  castFrom?: GroundEffect["castFrom"],
 ): GroundEffect => ({
   ...VisualTag.parse({
     type: "visual",
@@ -679,6 +770,10 @@ const visualEffect = (
     staticAssetPath: visuals.staticAssetPath ?? "",
     staticAnimation: visuals.staticAnimation ?? "",
     animationScale: visuals.animationScale,
+    animationMirror: visuals.animationMirror,
+    animationStagger: visuals.animationStagger,
+    animationRipple: visuals.animationRipple,
+    animationAlternate: visuals.animationAlternate,
     animationOffsetY: visuals.animationOffsetY,
     projectileAnimation: visuals.projectileAnimation,
     projectileScale: visuals.projectileScale,
@@ -702,6 +797,7 @@ const visualEffect = (
   castThisRound: true,
   longitude: tile.col,
   latitude: tile.row,
+  ...(castFrom ? { castFrom } : {}),
 });
 
 const preloadImages = async (urls: string[], timeoutMs: number) => {
