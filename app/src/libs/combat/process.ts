@@ -174,8 +174,29 @@ export const checkFriendlyFire = (
   return false;
 };
 
+/** Presentation an effect's appear and disappear visuals keep from the effect. */
+type VisualPresentation = Partial<
+  Pick<
+    BattleEffect,
+    | "animationScale"
+    | "animationMirror"
+    | "animationStagger"
+    | "animationRipple"
+    | "animationAlternate"
+    | "castFrom"
+  >
+>;
+
 /**
- * Create a visual effect with a specified appearAnimation and optional SFX
+ * Disappear visuals keep the effect's size and tile variation; the alternate clip stands in
+ * for the appear animation only.
+ */
+const disappearing = ({ animationAlternate: _, ...presentation }: VisualPresentation) =>
+  presentation;
+
+/**
+ * Create a visual effect with a specified appearAnimation and optional SFX. An appear visual
+ * names the effect it announces (`arrivalFor`), so that effect plays no arrival of its own.
  */
 const getVisualOrSound = (
   longitude: number,
@@ -183,7 +204,8 @@ const getVisualOrSound = (
   animation: string | undefined,
   sfx: string | undefined,
   round: number,
-  animationScale = 1,
+  presentation: VisualPresentation = {},
+  arrivalFor?: string,
 ): GroundEffect => {
   return {
     ...VisualTag.parse({
@@ -191,7 +213,11 @@ const getVisualOrSound = (
       rounds: 0,
       description: "N/A",
       appearAnimation: animation,
-      animationScale,
+      animationScale: presentation.animationScale,
+      animationMirror: presentation.animationMirror,
+      animationStagger: presentation.animationStagger,
+      animationRipple: presentation.animationRipple,
+      animationAlternate: presentation.animationAlternate,
       appearSfx: sfx ?? "",
       createdAt: Date.now(),
     }),
@@ -199,6 +225,8 @@ const getVisualOrSound = (
     id: nanoid(),
     createdRound: round,
     creatorId: nanoid(),
+    ...(presentation.castFrom ? { castFrom: presentation.castFrom } : {}),
+    ...(arrivalFor ? { arrivalFor } : {}),
     level: 0,
     barrierAbsorb: 0,
     isNew: true,
@@ -294,7 +322,7 @@ export const expireGroundEffects = (battle: CompleteBattle, actionRounds: number
           effect.disappearAnimation,
           effect.disappearSfx,
           battle.round,
-          effect.animationScale,
+          disappearing(effect),
         ),
       );
     return false;
@@ -785,7 +813,8 @@ const applyGroundEffects = ({
             e.appearAnimation,
             e.appearSfx,
             round,
-            e.animationScale,
+            e,
+            e.id,
           ),
         );
       }
@@ -802,7 +831,7 @@ const applyGroundEffects = ({
             e.disappearAnimation,
             e.disappearSfx,
             round,
-            e.animationScale,
+            disappearing(e),
           ),
         );
       }
@@ -1654,10 +1683,12 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
     actionEffects.push(info);
   }
 
-  // Show once appearing visual/audio
+  // Show once appearing visual/audio. A ground effect forwarded onto a fighter already shows
+  // its clips and sounds on its tile through the ground lifecycle.
   if (
     (effect.appearAnimation || effect.appearSfx) &&
     effect.isNew &&
+    !effect.fromGround &&
     longitude !== undefined &&
     latitude !== undefined
   ) {
@@ -1668,7 +1699,9 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
         effect.appearAnimation,
         effect.appearSfx,
         battle.round,
-        effect.animationScale,
+        // A character effect's visuals play on that character, so they keep only its size.
+        { animationScale: effect.animationScale },
+        effect.id,
       ),
     );
   }
@@ -1678,6 +1711,7 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
     newUsersEffects.push(effect);
   } else if (
     (effect.disappearAnimation || effect.disappearSfx) &&
+    !effect.fromGround &&
     longitude !== undefined &&
     latitude !== undefined
   ) {
@@ -1688,7 +1722,7 @@ export const applySingleEffect = (resolution: EffectResolution, effect: UserEffe
         effect.disappearAnimation,
         effect.disappearSfx,
         round,
-        effect.animationScale,
+        { animationScale: effect.animationScale },
       ),
     );
   }

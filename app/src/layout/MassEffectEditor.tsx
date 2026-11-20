@@ -12,7 +12,7 @@ import { NumberInput, validateNumberInputs } from "@/components/ui/number-input"
 import { Switch } from "@/components/ui/switch";
 import { useSingleFlight } from "@/hooks/useSingleFlight";
 import { useUnsavedChangesGuard } from "@/hooks/useUnsavedChangesGuard";
-import { unwrapFieldSchema } from "@/layout/EditContent";
+import { hiddenEffectFields, unwrapFieldSchema } from "@/layout/EditContent";
 import { SearchSelect } from "@/layout/SearchSelect";
 import type { ColumnDefinitionType } from "@/layout/Table";
 import Table from "@/layout/Table";
@@ -464,11 +464,19 @@ export const EffectFieldInputGeneric = <E extends ZodAllTags>(opts: {
   const fieldSchema = (schema.shape as Record<string, z.ZodType>)[field] as
     | z.ZodType
     | undefined;
-  if (!fieldSchema) return <div className="text-muted-foreground">N/A</div>;
+  if (!fieldSchema || hiddenEffectFields(effect.type).includes(field))
+    return <div className="text-muted-foreground">N/A</div>;
   const inner = unwrapFieldSchema(fieldSchema);
   const eff = effect as unknown as Record<string, unknown>;
 
-  if (["appearAnimation", "disappearAnimation", "staticAnimation"].includes(field)) {
+  if (
+    [
+      "appearAnimation",
+      "animationAlternate",
+      "disappearAnimation",
+      "staticAnimation",
+    ].includes(field)
+  ) {
     const raw = eff[field];
     const value = typeof raw === "string" ? raw : "";
     return (
@@ -477,7 +485,11 @@ export const EffectFieldInputGeneric = <E extends ZodAllTags>(opts: {
         placeholder="Select"
         value={value}
         onChange={(v) => onChange(v)}
-        options={opts.options?.animation || []}
+        options={
+          field === "animationAlternate"
+            ? [{ label: "None", value: "" }, ...(opts.options?.animation || [])]
+            : opts.options?.animation || []
+        }
         disabled={opts.disabled}
       />
     );

@@ -204,6 +204,7 @@ const maskBattleExtraState = (battle: Battle, userId: string): ReturnedExtraStat
         ...effects
           .flatMap((e) => [
             e.appearAnimation,
+            e.animationAlternate,
             e.disappearAnimation,
             e.staticAnimation,
             e.staticAssetPath,

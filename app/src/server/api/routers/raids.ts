@@ -122,7 +122,11 @@ import { notifyRankedQueueChanged } from "@/server/utils/rankedQueue";
 import { validateTitleRewardIds } from "@/server/utils/titleRewards";
 import { canChangeContent } from "@/utils/permissions";
 import { secondsFromDate } from "@/utils/time";
-import { AllTags, SuperRefinePassiveEffects } from "@/validators/combat";
+import {
+  AllTags,
+  SuperRefineAnimationAlternate,
+  SuperRefinePassiveEffects,
+} from "@/validators/combat";
 import type { RaidObjectiveType } from "@/validators/objectives";
 import { ObjectiveReward } from "@/validators/rewards";
 import { userDeltaResponseSchema } from "@/validators/userCache";
@@ -131,7 +135,11 @@ const damageThresholdFields = {
   damageRequired: z.number().min(1),
   rewards: ObjectiveReward,
   // Effects become passive user buffs at battle start, so they carry no tile.
-  effects: z.array(AllTags).superRefine(SuperRefinePassiveEffects).prefault([]),
+  effects: z
+    .array(AllTags)
+    .superRefine(SuperRefinePassiveEffects)
+    .superRefine(SuperRefineAnimationAlternate)
+    .prefault([]),
   effectDurationMinutes: z.number().min(1).max(10080).prefault(60),
 };
 

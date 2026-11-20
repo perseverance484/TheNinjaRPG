@@ -33,6 +33,7 @@ export const hasInvalidEffectAssets = (
   effects.some((e) =>
     [
       e.appearAnimation,
+      e.animationAlternate,
       e.disappearAnimation,
       e.staticAnimation,
       e.staticAssetPath,

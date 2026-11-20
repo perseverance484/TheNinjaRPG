@@ -281,7 +281,10 @@ describe("battle response privacy", () => {
     battle.usersEffects = [
       makeEffect(
         "visual",
-        { appearAnimation: "visible-animation" },
+        {
+          appearAnimation: "visible-animation",
+          animationAlternate: "visible-alternate",
+        },
         {
           creatorId: "foe",
           targetId: "me",
@@ -298,6 +301,7 @@ describe("battle response privacy", () => {
     });
     expect(masked.usersEffects[0]).not.toHaveProperty("highestGenerals");
     expect(masked.extraState.textureAssets).toContain("visible-animation");
+    expect(masked.extraState.textureAssets).toContain("visible-alternate");
     expect(masked.extraState.textureAssets).not.toContain("uncast-animation");
     expect(masked.extraState.sfxAssets).not.toContain("uncast-sound");
   });

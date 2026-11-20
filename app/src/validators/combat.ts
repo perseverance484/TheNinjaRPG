@@ -123,8 +123,13 @@ const BaseAttributes = {
   staticAssetPath: z.string().prefault(""),
   staticAnimation: z.string().prefault(""),
   appearAnimation: z.string().prefault(""),
+  animationAlternate: z.string().prefault(""),
   disappearAnimation: z.string().prefault(""),
   animationScale: z.coerce.number().min(1).max(3).prefault(1),
+  // Area variation, with animationAlternate: ground clips differ per tile (tileVariation)
+  animationMirror: z.boolean().prefault(false),
+  animationStagger: z.coerce.number().int().min(0).max(1000).prefault(0),
+  animationRipple: z.coerce.number().int().min(0).max(300).prefault(0),
   // SFX controls
   appearSfx: z.string().prefault(""),
   disappearSfx: z.string().prefault(""),
@@ -1257,6 +1262,21 @@ export const questDebuffTypes = [
   "wound",
 ] as const;
 
+/** An alternate stands in for an appear clip on some tiles, so it needs one to replace. */
+export const SuperRefineAnimationAlternate = (
+  effects: Pick<ZodAllTags, "animationAlternate" | "appearAnimation">[],
+  ctx: z.RefinementCtx,
+) => {
+  effects.forEach((e, index) => {
+    if (e.animationAlternate && !e.appearAnimation)
+      ctx.addIssue({
+        code: "custom",
+        path: [index, "animationAlternate"],
+        message: "Choose an appear animation for the alternate to stand in for.",
+      });
+  });
+};
+
 /** Validate full combat tags against the permitted list and require an opening-round duration. */
 export const questStartingEffectsSchema = (types: readonly string[]) =>
   z
@@ -1278,6 +1298,7 @@ export const questStartingEffectsSchema = (types: readonly string[]) =>
           });
       });
     })
+    .superRefine(SuperRefineAnimationAlternate)
     .prefault([]);
 
 export type EffectType = (typeof tagTypes)[number];
@@ -1750,6 +1771,7 @@ const SuperRefineJutsu = (
  * Validator specific to effects
  */
 export const SuperRefineEffects = (effects: ZodAllTags[], ctx: z.RefinementCtx) => {
+  SuperRefineAnimationAlternate(effects, ctx);
   effects.forEach((e, index) => {
     if (e.target === "COORDINATES" && !e.coordinateTargeting) {
       ctx.addIssue({

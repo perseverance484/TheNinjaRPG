@@ -70,4 +70,36 @@ describe("raid damage threshold effects", () => {
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
     expect(database.update).not.toHaveBeenCalled();
   });
+
+  it("requires an appear animation for an alternate on create and update", async () => {
+    const { caller, database } = makeCaller();
+    const orphan = IncreaseStatTag.parse({ animationAlternate: "alternate" });
+    await expect(
+      caller.createDamageThreshold({
+        questId: "raid-quest",
+        damageRequired: 100,
+        rewards,
+        effects: [orphan],
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      caller.updateDamageThreshold({
+        thresholdId: "threshold",
+        damageRequired: 100,
+        sortOrder: 0,
+        rewards,
+        effects: [orphan],
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(database.insert).not.toHaveBeenCalled();
+    expect(database.update).not.toHaveBeenCalled();
+    expect(
+      await caller.createDamageThreshold({
+        questId: "raid-quest",
+        damageRequired: 100,
+        rewards,
+        effects: [{ ...orphan, appearAnimation: "base" }],
+      }),
+    ).toMatchObject({ success: true });
+  });
 });

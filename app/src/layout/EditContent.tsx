@@ -167,6 +167,10 @@ export const EditContent = <
     control: form.control,
     name: "staticAnimation" as Path<S>,
   });
+  const watchAlternateSel = useWatch({
+    control: form.control,
+    name: "animationAlternate" as Path<S>,
+  });
   const watchAppearSfx = useWatch({
     control: form.control,
     name: "appearSfx" as Path<S>,
@@ -181,6 +185,7 @@ export const EditContent = <
         watchAppearSel,
         watchDisappearSel,
         watchStaticSel,
+        watchAlternateSel,
         watchAppearSfx,
         watchDisappearSfx,
       ]
@@ -190,6 +195,7 @@ export const EditContent = <
       watchAppearSel,
       watchDisappearSel,
       watchStaticSel,
+      watchAlternateSel,
       watchAppearSfx,
       watchDisappearSfx,
     ],
@@ -1597,11 +1603,12 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
     const hasItemDraft = ["noncombatconsumereward", "noncombatquest"].includes(
       watchType,
     );
-    // Scale drafts reach the parent so Save validates the visible size, including invalid input.
-    const hasAnimationScaleDraft = !Object.is(
-      watchAll.animationScale,
-      tag.animationScale ?? 1,
-    );
+    // Scale, stagger and ripple drafts reach the parent so Save validates the visible value,
+    // including invalid input.
+    const hasAnimationNumberDraft =
+      !Object.is(watchAll.animationScale, tag.animationScale ?? 1) ||
+      !Object.is(watchAll.animationStagger, tag.animationStagger ?? 0) ||
+      !Object.is(watchAll.animationRipple, tag.animationRipple ?? 0);
     const leftCoordinateTarget = tag.target === "COORDINATES" && !hasCoordinateDraft;
     const draft = leftCoordinateTarget
       ? { ...watchAll, coordinateTargeting: null }
@@ -1609,7 +1616,7 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
     const parsedTag = tagSchema.safeParse(draft);
     const shownTag = parsedTag.success
       ? parsedTag.data
-      : hasCoordinateDraft || hasItemDraft || hasAnimationScaleDraft
+      : hasCoordinateDraft || hasItemDraft || hasAnimationNumberDraft
         ? draft
         : tag;
     newEffects[idx] = shownTag;
@@ -1622,12 +1629,12 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
         if (
           hasCoordinateDraft ||
           hasItemDraft ||
-          hasAnimationScaleDraft ||
+          hasAnimationNumberDraft ||
           (leftCoordinateTarget && parsedTag.success) ||
           form.formState.isValid
         ) {
           setEffects(newEffects);
-          if (parsedTag.success && !hasAnimationScaleDraft) form.reset(draft);
+          if (parsedTag.success && !hasAnimationNumberDraft) form.reset(draft);
         }
       }
     }
@@ -1639,10 +1646,6 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
 
   // Parse how to present the tag form
   const ignore = ["timeTracker", "type", "weightedCache", "rewardMode"];
-  if (isActivityBonus(tag) || tag.type === "increasejutsuslots")
-    ignore.push(
-      ...attributes.filter((key) => key !== "power" && key !== "description"),
-    );
   if (watchAll.rewardMode === "weightedCache") {
     ignore.push(
       ...Object.keys(tagSchema.shape).filter((key) => key.startsWith("reward_")),
@@ -1679,7 +1682,7 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
   const formData: FormEntry<Attribute>[] = attributes
     .filter((value) => !ignore.includes(value))
     .filter((value) => !props.editableFields || props.editableFields.includes(value))
-    .filter((value) => !OUT_OF_BATTLE_HIDDEN_FIELDS.get(watchType)?.includes(value))
+    .filter((value) => !hiddenEffectFields(watchType).includes(value))
     .map((value) => {
       const rewardCatalogEntry = rewardCatalogFormEntry(value, rewardCatalogs);
       if (rewardCatalogEntry) return rewardCatalogEntry;
@@ -1789,6 +1792,15 @@ export const EffectFormWrapper: React.FC<EffectFormWrapperProps> = (props) => {
       } else if (innerType instanceof z.ZodString && value === "appearAnimation") {
         return {
           id: value,
+          values: animations,
+          multiple: false,
+          type: "db_values",
+        };
+      } else if (innerType instanceof z.ZodString && value === "animationAlternate") {
+        return {
+          id: value,
+          // It stands in for the appear animation, so it needs one.
+          label: "Alternate appear animation",
           values: animations,
           multiple: false,
           type: "db_values",
@@ -2182,6 +2194,8 @@ export const FORM_LABEL_MAP: Record<string, string> = {
   singleBattle: "Track best single-battle only (else cumulative)",
   bloodlineRanks: "Bloodline ranks to include",
   animationScale: "Animation scale (1–3×)",
+  animationStagger: "Animation stagger (ms, 0–1000)",
+  animationRipple: "Animation ripple (ms per hex from caster, 0–300)",
   shieldRounds: "Shield Rounds",
   delayRounds: "Diffuse Repayment Turns",
 };
@@ -2246,6 +2260,7 @@ const CATEGORY_CLASSES: Record<string, string> = {
 /** Effect fields edited through the game-asset picker instead of a combobox. */
 const ASSET_PICKER_FIELDS: readonly string[] = [
   "appearAnimation",
+  "animationAlternate",
   "disappearAnimation",
   "staticAnimation",
   "staticAssetPath",
@@ -2257,6 +2272,10 @@ const ASSET_PICKER_FIELDS: readonly string[] = [
 const BATTLE_ONLY_FIELDS = [
   "staticAnimation",
   "animationScale",
+  "animationMirror",
+  "animationStagger",
+  "animationRipple",
+  "animationAlternate",
   "staticAssetPath",
   "appearAnimation",
   "disappearAnimation",
@@ -2279,7 +2298,18 @@ const OUT_OF_BATTLE_HIDDEN_FIELDS = new Map<string, readonly string[]>([
   ["rollsagemode", BATTLE_ONLY_FIELDS],
   ["removebloodline", BATTLE_ONLY_FIELDS],
   ["marriageslotincrease", BATTLE_ONLY_FIELDS],
+  ["noncombatincreasereskins", BATTLE_ONLY_FIELDS],
 ]);
+
+/** Fields an effect of this type never uses, so editors leave them out. */
+export const hiddenEffectFields = (type: string): readonly string[] => {
+  // Activity bonuses and jutsu-slot grants are set by their power alone.
+  if (isActivityBonus({ type }) || type === "increasejutsuslots")
+    return Object.keys(getTagSchema(type as ZodAllTags["type"]).shape).filter(
+      (key) => !["type", "power", "description"].includes(key),
+    );
+  return OUT_OF_BATTLE_HIDDEN_FIELDS.get(type) ?? [];
+};
 
 /**
  * Whether a combobox field has a selected value. `0` is a real choice (e.g. sage

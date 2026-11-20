@@ -64,7 +64,20 @@ export const JUTSU_EFFECT_COSMETICS = [
   "staticAssetPath",
   "staticAnimation",
   "animationScale",
+  "animationMirror",
+  "animationStagger",
+  "animationRipple",
+  "animationAlternate",
 ] as const;
+
+/** Values a reskin's own effect takes for presentation settings it predates. */
+const COSMETIC_DEFAULTS = {
+  animationScale: 1,
+  animationMirror: false,
+  animationStagger: 0,
+  animationRipple: 0,
+  animationAlternate: "",
+} as const;
 
 /**
  * Keep the parent's effect order and mechanics, pairing repeated types by occurrence
@@ -81,8 +94,11 @@ export const inheritJutsuReskinEffects = (
     const cosmetic = index >= 0 ? remaining.splice(index, 1)[0] : undefined;
     const inherited = { ...effect };
     for (const key of JUTSU_EFFECT_COSMETICS) {
-      if (key === "animationScale" && cosmetic) {
-        inherited.animationScale = cosmetic.animationScale ?? 1;
+      if (key in COSMETIC_DEFAULTS && cosmetic) {
+        const fallback = COSMETIC_DEFAULTS[key as keyof typeof COSMETIC_DEFAULTS];
+        Object.assign(inherited, {
+          [key]: cosmetic[key as keyof typeof cosmetic] ?? fallback,
+        });
       } else if (key in inherited && cosmetic && key in cosmetic) {
         Object.assign(inherited, { [key]: cosmetic[key as keyof typeof cosmetic] });
       }

@@ -313,7 +313,7 @@ const effectsWith = (effects: unknown, keep: (key: string) => boolean) =>
 /** Effect keys that decide how an effect plays, leaving out media, text and battle state. */
 const isMechanicKey = (key: string) =>
   !MEDIA_KEYS.includes(key) &&
-  key !== "animationScale" &&
+  !ANIMATION_LAYOUT_KEYS.includes(key) &&
   key !== "description" &&
   key !== "timeTracker";
 
@@ -350,9 +350,18 @@ const MEDIA_KEYS = [
   "staticAssetPath",
   "staticAnimation",
   "appearAnimation",
+  "animationAlternate",
   "disappearAnimation",
   "appearSfx",
   "disappearSfx",
+];
+
+/** Effect keys that size and vary its clips without changing what it does. */
+const ANIMATION_LAYOUT_KEYS = [
+  "animationScale",
+  "animationMirror",
+  "animationStagger",
+  "animationRipple",
 ];
 
 /** Fields the grammar focus reads per type: the texts players see, and what they describe. */
@@ -431,8 +440,12 @@ const VIEWS: Record<ContentAuditFocus, View> = {
           "type",
           "target",
           "appearAnimation",
+          "animationAlternate",
           "staticAnimation",
           "animationScale",
+          "animationMirror",
+          "animationStagger",
+          "animationRipple",
           "disappearAnimation",
           "staticAssetPath",
           "elements",

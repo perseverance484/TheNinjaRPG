@@ -85,6 +85,21 @@ describe("method size", () => {
       expect(expanded.length).toBeGreaterThan(base.length);
     },
   );
+  it("records the caster's tile on every ground effect of a cast", () => {
+    const info = setup();
+    const action = { ...info.action, methodSize: { x: 1, y: 1 } };
+    insertAction({
+      battle: info.battle,
+      grid: info.grid,
+      action,
+      actorId: "actor",
+      longitude: info.b.col,
+      latitude: info.b.row,
+    });
+    expect(info.battle.groundEffects.length).toBeGreaterThan(1);
+    for (const effect of info.battle.groundEffects)
+      expect(effect.castFrom).toEqual({ longitude: 0, latitude: 0 });
+  });
   it("uses the same expanded footprint for preview and accepted cast", () => {
     const info = setup();
     const action = { ...info.action, methodSize: { x: 1, y: 1 } };
