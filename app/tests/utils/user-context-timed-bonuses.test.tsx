@@ -15,8 +15,10 @@ import { type ReactNode, useState } from "react";
 import * as client from "@/app/_trpc/client";
 import * as pusher from "@/layout/PusherHandler";
 import { getTerritoryWarBoost } from "@/libs/territoryWar";
+import { RESOURCE_SILO_NOTIFICATION } from "@/libs/userNotifications";
 import type { useUserData } from "@/utils/UserContext";
 import { UserContextProvider, useUserDataSelector } from "@/utils/UserContext";
+import * as userCache from "@/utils/userCache";
 
 const BASE = Date.UTC(2026, 9, 24, 12);
 const refetch = vi.fn();
@@ -50,10 +52,12 @@ const mount = (
   fields: Record<string, unknown>,
   children: ReactNode = <div>Recipe</div>,
   snapshotAt = new Date(BASE - 2000),
+  resourceSiloHasRewards = true,
 ) => {
   const response = {
     serverTime: BASE - 2000,
     snapshotAt,
+    resourceSiloHasRewards,
     notifications: [
       otherBoostNotice,
       {
@@ -179,5 +183,32 @@ describe("global timed bonus refresh", () => {
     expect(before.notifications).toHaveLength(2);
     expect(after.notifications).toEqual([otherBoostNotice]);
     expect(view.getByText("0")).toBeTruthy();
+  });
+
+  it("shows the silo notice at its opening without reloading the profile", () => {
+    // BASE is Saturday 12:00 UTC, when a silo window opens.
+    const update = vi.spyOn(userCache, "updateUserNotifications");
+    mount({ isAi: false, tutorialOn: false, resourceSiloProgress: null });
+    act(() => advance(4000));
+    expect(refetch).not.toHaveBeenCalled();
+    expect(update).toHaveBeenCalledTimes(1);
+    const apply = update.mock.calls[0]![2];
+    expect(apply([otherBoostNotice])).toEqual([
+      otherBoostNotice,
+      RESOURCE_SILO_NOTIFICATION,
+    ]);
+  });
+
+  it("leaves the silo notice off at an opening while no rewards are set up", () => {
+    const update = vi.spyOn(userCache, "updateUserNotifications");
+    mount(
+      { isAi: false, tutorialOn: false, resourceSiloProgress: null },
+      undefined,
+      undefined,
+      false,
+    );
+    act(() => advance(4000));
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(update.mock.calls[0]![2]([otherBoostNotice])).toBeUndefined();
   });
 });

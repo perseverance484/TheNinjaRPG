@@ -23,6 +23,7 @@ import {
 import { resourceSilosRouter } from "@/server/api/routers/resourceSilos";
 import type { DrizzleClient } from "@/server/db";
 import { invalidatePvpExperienceAverage } from "@/server/utils/caches/pvpExperienceAverage";
+import { hasResourceSiloRewards } from "@/server/utils/caches/resourceSiloRewards";
 import * as time from "@/utils/time";
 import { ObjectiveReward } from "@/validators/rewards";
 import { makeBattleUser, makeCompleteBattle } from "../../../setup/combat";
@@ -467,5 +468,9 @@ describeWithDatabase("resource silo claims and recovery", () => {
     await db.delete(rewardPackage).where(eq(rewardPackage.id, "source"));
     expect((await caller.claim()).success).toBe(true);
     expect((await row())!.money).toBe(50321);
+    // Saving refreshes the flag behind the open-silo notice at once.
+    expect(await hasResourceSiloRewards(db)).toBe(true);
+    expect((await caller.save({ entries: [] })).success).toBe(true);
+    expect(await hasResourceSiloRewards(db)).toBe(false);
   });
 });

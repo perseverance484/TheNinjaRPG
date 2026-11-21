@@ -17,7 +17,11 @@ import {
   useState,
 } from "react";
 import { api, type RouterOutputs } from "@/app/_trpc/client";
-import type { UserUpdate, UserUpdateOptions } from "@/deltas/profile";
+import {
+  syncResourceSiloNotification,
+  type UserUpdate,
+  type UserUpdateOptions,
+} from "@/deltas/profile";
 import type { StructureRoute } from "@/drizzle/constants";
 import { useNavigationRouter } from "@/hooks/navigation";
 import { useActionPreferenceCacheUpdate } from "@/hooks/useActionPreferenceCacheUpdate";
@@ -32,6 +36,7 @@ import { getTerritoryWarBoostUntil } from "@/libs/territoryWar";
 import { showMutationToast } from "@/libs/toast";
 import type { AchievementProgress, UserWithRelations } from "@/routers/profile";
 import { loginRedirectPath } from "@/utils/routing";
+import { getResourceSiloBoundaries } from "@/utils/time";
 import {
   prepareUserUpdate as captureUserUpdate,
   updateUserCache,
@@ -267,6 +272,25 @@ export function UserContextProvider(props: {
     [queryClient, userQueryKey],
   );
 
+  // Silo windows open on a shared schedule; toggle their notice locally rather than
+  // having every client reload its profile on the same minute.
+  useRefreshAt(
+    data?.snapshotAt ? getResourceSiloBoundaries(data.snapshotAt) : [],
+    () => {
+      void updateNotifications((current) =>
+        syncResourceSiloNotification(
+          current,
+          data?.userData,
+          !!data?.resourceSiloHasRewards,
+          new Date(Date.now() - timeDiff),
+        ),
+      );
+    },
+    timeDiff,
+    !!userId && !!isSignedIn && isLoaded,
+    data?.snapshotAt,
+  );
+
   // Time diff setting
   useEffect(() => {
     if (data?.serverTime) {
@@ -383,6 +407,10 @@ const selectSessionServices = ({
     raidBuffs: user.raidBuffs,
     cookingJobs: user.cookingJobs,
     serviceCraftUntil: user.serviceCraftUntil,
+    isAi: user.isAi,
+    tutorialOn: user.tutorialOn,
+    tutorialStep: user.tutorialStep,
+    resourceSiloProgress: user.resourceSiloProgress,
   },
 });
 

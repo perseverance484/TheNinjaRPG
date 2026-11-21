@@ -19,8 +19,10 @@ import { hasEnergyQueue } from "@/libs/queue";
 import { getReducedGainsDays } from "@/libs/train";
 import {
   getNoJutsuEquippedNotifications,
+  getResourceSiloNotifications,
   getUserFactionNotifications,
   NO_JUTSU_EQUIPPED_NOTIFICATION,
+  RESOURCE_SILO_NOTIFICATION,
 } from "@/libs/userNotifications";
 import type {
   fetchUser,
@@ -657,3 +659,19 @@ export const getTavernColorPatch = (
 
 /** Loaded energy queue pointers used to decide whether a profile delta needs reconciliation. */
 export type UserQueueState = Pick<UserData, "energyQueueHead" | "energyQueueTail">;
+
+/** Add or drop the silo notice at a window edge, leaving other notifications untouched. */
+export const syncResourceSiloNotification = (
+  current: NavBarDropdownLink[] | undefined,
+  user: Parameters<typeof getResourceSiloNotifications>[0],
+  hasRewards: boolean,
+  now: Date,
+) => {
+  if (!current) return undefined;
+  const shown = current.some((entry) => entry.name === RESOURCE_SILO_NOTIFICATION.name);
+  const wanted = getResourceSiloNotifications(user, hasRewards, now).length > 0;
+  if (shown === wanted) return undefined;
+  return wanted
+    ? [...current, RESOURCE_SILO_NOTIFICATION]
+    : current.filter((entry) => entry.name !== RESOURCE_SILO_NOTIFICATION.name);
+};

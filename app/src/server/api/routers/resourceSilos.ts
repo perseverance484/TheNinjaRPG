@@ -41,6 +41,7 @@ import {
   prepareActionReadiness,
 } from "@/server/utils/actionReadiness";
 import { fetchPvpExperienceAverage } from "@/server/utils/caches/pvpExperienceAverage";
+import { invalidateResourceSiloRewards } from "@/server/utils/caches/resourceSiloRewards";
 import { retryOnDeadlock } from "@/server/utils/mysqlErrors";
 import { pushActivityUpdate } from "@/server/utils/push/liveActivity";
 import { nameGrantedRewards, updateRewards } from "@/server/utils/questRewards";
@@ -166,6 +167,8 @@ export const resourceSilosRouter = createTRPCRouter({
       );
       if (titleError) return errorResponse(titleError);
       await saveResourceSilo(ctx.drizzle, entries);
+      // Show or hide the open-silo notice as soon as rewards are added or removed.
+      await invalidateResourceSiloRewards();
       await auditResourceSilo(ctx.drizzle, ctx.userId, config?.entries ?? [], entries);
       return { success: true, message: "Resource Silos saved", entries };
     }),

@@ -1,10 +1,14 @@
 import { describe, expect, it } from "bun:test";
+import { syncResourceSiloNotification } from "@/deltas/profile";
 import {
   getNoJutsuEquippedNotifications,
+  getResourceSiloNotifications,
   getUserFactionNotifications,
   NO_JUTSU_EQUIPPED_NOTIFICATION,
+  RESOURCE_SILO_NOTIFICATION,
 } from "@/libs/userNotifications";
 import type { UserWithRelations } from "@/server/api/routers/profile";
+import { getResourceSiloBoundaries } from "@/utils/time";
 
 const notify = (overrides: Record<string, unknown>) =>
   getUserFactionNotifications({
@@ -238,5 +242,78 @@ describe("getNoJutsuEquippedNotifications", () => {
       [],
     );
     expect(getNoJutsuEquippedNotifications(undefined)).toEqual([]);
+  });
+});
+
+describe("getResourceSiloNotifications", () => {
+  // Friday 2026-11-13: windows open 12:00-13:00 and 15:00-16:00 UTC.
+  const open = new Date("2026-11-13T12:30:00Z");
+  const player = { isAi: false, tutorialOn: false, resourceSiloProgress: null };
+
+  it("shows the notice only while a window is open", () => {
+    expect(getResourceSiloNotifications(player, true, open)).toEqual([
+      RESOURCE_SILO_NOTIFICATION,
+    ]);
+    expect(RESOURCE_SILO_NOTIFICATION.name).toBe("Resource Silo open (Sector 335)");
+    for (const closed of ["2026-11-13T13:00:00Z", "2026-11-11T12:30:00Z"])
+      expect(getResourceSiloNotifications(player, true, new Date(closed))).toEqual([]);
+  });
+
+  it("hides the notice once this window is claimed, but not for an earlier claim", () => {
+    const progress = (windowId: string) => ({ windowId, points: 60, claimed: true });
+    expect(
+      getResourceSiloNotifications(
+        { ...player, resourceSiloProgress: progress("2026-11-13T12:00:00.000Z") },
+        true,
+        open,
+      ),
+    ).toEqual([]);
+    expect(
+      getResourceSiloNotifications(
+        { ...player, resourceSiloProgress: progress("2026-11-13T09:00:00.000Z") },
+        true,
+        open,
+      ),
+    ).toEqual([RESOURCE_SILO_NOTIFICATION]);
+  });
+
+  it("stays hidden while no silo reward is set up to claim", () => {
+    expect(getResourceSiloNotifications(player, false, open)).toEqual([]);
+    expect(syncResourceSiloNotification([], player, false, open)).toBeUndefined();
+  });
+
+  it("skips AI, tutorial players and missing users", () => {
+    expect(getResourceSiloNotifications({ ...player, isAi: true }, true, open)).toEqual(
+      [],
+    );
+    expect(
+      getResourceSiloNotifications({ ...player, tutorialOn: true }, true, open),
+    ).toEqual([]);
+    expect(getResourceSiloNotifications(undefined, true, open)).toEqual([]);
+  });
+
+  it("lists every opening and closing through the following week", () => {
+    const boundaries = getResourceSiloBoundaries(new Date("2026-11-11T12:00:00Z"));
+    // Friday to Sunday UTC: 3 days of 8 windows, each with an opening and a closing.
+    expect(boundaries).toHaveLength(48);
+    expect(boundaries[0]?.toISOString()).toBe("2026-11-13T00:00:00.000Z");
+    expect(boundaries[1]?.toISOString()).toBe("2026-11-13T01:00:00.000Z");
+    expect(boundaries.at(-1)?.toISOString()).toBe("2026-11-15T22:00:00.000Z");
+  });
+
+  it("toggles only the silo notice at a window edge", () => {
+    const other = { href: "/news", name: "2 news", color: "hidden" as const };
+    const added = syncResourceSiloNotification([other], player, true, open);
+    expect(added).toEqual([other, RESOURCE_SILO_NOTIFICATION]);
+    expect(syncResourceSiloNotification(added, player, true, open)).toBeUndefined();
+    expect(
+      syncResourceSiloNotification(
+        added,
+        player,
+        true,
+        new Date("2026-11-13T13:00:00Z"),
+      ),
+    ).toEqual([other]);
+    expect(syncResourceSiloNotification(undefined, player, true, open)).toBeUndefined();
   });
 });

@@ -152,6 +152,7 @@ import {
 } from "@/libs/train";
 import {
   getNoJutsuEquippedNotifications,
+  getResourceSiloNotifications,
   getUserFactionNotifications,
 } from "@/libs/userNotifications";
 import { fetchSquad } from "@/queries/anbu";
@@ -296,6 +297,7 @@ import {
 import { fetchAchievementCatalogue } from "@/server/utils/caches/achievementCatalogue";
 import { fetchBloodlineCollectionCatalogue } from "@/server/utils/caches/bloodlineCollectionCatalogue";
 import { invalidateOverworldSectorPlacements } from "@/server/utils/caches/overworldSectorPlacements";
+import { hasResourceSiloRewards } from "@/server/utils/caches/resourceSiloRewards";
 import {
   adjustSeichiSilverAtomically,
   claimUserSnapshot,
@@ -907,6 +909,7 @@ export const profileRouter = createTRPCRouter({
         applicationCounts,
         reviewCounts,
         unreadAnnouncements,
+        resourceSiloHasRewards,
       ] = await Promise.all([
         user?.status === "AWAKE" &&
         activeDungeon &&
@@ -920,6 +923,7 @@ export const profileRouter = createTRPCRouter({
           : null,
         canReviewContent ? selectContentProposalForGetUser(ctx.drizzle) : null,
         user ? listUserAnnouncements(ctx.drizzle, user) : [],
+        user ? hasResourceSiloRewards(ctx.drizzle) : false,
       ]);
       if (user && dungeonClaim?.rowsAffected === 1) user.status = "QUEUED";
       // Figure out notifications
@@ -1001,6 +1005,9 @@ export const profileRouter = createTRPCRouter({
 
       notifications.push(...getUserFactionNotifications(user, now));
       notifications.push(...getNoJutsuEquippedNotifications(user));
+      notifications.push(
+        ...getResourceSiloNotifications(user, resourceSiloHasRewards, now),
+      );
 
       // Add notification for unvoted polls
       if (
@@ -1213,6 +1220,8 @@ export const profileRouter = createTRPCRouter({
           : user,
         achievementProgress: achievementProgress,
         notifications: notifications,
+        // Lets the client show the silo notice when a window opens between profile reads.
+        resourceSiloHasRewards,
         isEventParticipant: tournamentNoticeState.isEventParticipant,
         // Expiry refreshes cover bonuses evaluated before the response finishes.
         snapshotAt: now,

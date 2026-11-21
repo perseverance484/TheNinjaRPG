@@ -1,9 +1,14 @@
-import { KAGE_DEFENSE_REMINDER_HOURS } from "@/drizzle/constants";
+import {
+  KAGE_DEFENSE_REMINDER_HOURS,
+  MAP_WAR_TORN_BATTLEGROUND_SECTOR,
+} from "@/drizzle/constants";
 import type { NavBarDropdownLink } from "@/libs/menus";
 import { getWarSide } from "@/libs/objectiveWar";
 import { isTutorialActive } from "@/libs/tutorial";
 import type { UserWithRelations } from "@/server/api/routers/profile";
 import { getKageSetupDeadline } from "@/utils/kage";
+import { getResourceSiloWindow } from "@/utils/time";
+import type { ResourceSiloProgress } from "@/validators/resourceSilos";
 
 /** Sidebar warning for a player whose active jutsu loadout is empty. */
 export const NO_JUTSU_EQUIPPED_NOTIFICATION: NavBarDropdownLink = {
@@ -35,6 +40,44 @@ export const getNoJutsuEquippedNotifications = (
   !isTutorialActive(user)
     ? [NO_JUTSU_EQUIPPED_NOTIFICATION]
     : [];
+
+/** Sidebar notice while a weekend Resource Silo window is open at the War-Torn shrine. */
+export const RESOURCE_SILO_NOTIFICATION: NavBarDropdownLink = {
+  href: "/travel",
+  name: `Resource Silo open (Sector ${MAP_WAR_TORN_BATTLEGROUND_SECTOR})`,
+  color: "blue",
+  alwaysShow: true,
+};
+
+/**
+ * Announce an open silo window until the player has claimed it, while staff have set up
+ * rewards to claim. Derived from the same profile snapshot on server and client; skipped
+ * for AI and players still in the tutorial.
+ */
+export const getResourceSiloNotifications = (
+  user:
+    | {
+        isAi: boolean;
+        tutorialOn?: boolean | null;
+        tutorialStep?: number | null;
+        resourceSiloProgress?: ResourceSiloProgress | null;
+      }
+    | null
+    | undefined,
+  hasRewards: boolean,
+  now = new Date(),
+): NavBarDropdownLink[] => {
+  const window = getResourceSiloWindow(now);
+  const progress = user?.resourceSiloProgress;
+  return user &&
+    hasRewards &&
+    !user.isAi &&
+    window.active &&
+    !(progress?.windowId === window.id && progress.claimed) &&
+    !isTutorialActive(user)
+    ? [RESOURCE_SILO_NOTIFICATION]
+    : [];
+};
 
 /** Derive faction activity notices from the same profile snapshot on server and client. */
 export const getUserFactionNotifications = (

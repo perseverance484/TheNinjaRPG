@@ -526,3 +526,19 @@ export const getResourceSiloWindow = (now = new Date()) => {
   }
   return { active, id: start.toISOString(), start, end, next };
 };
+
+/** Opening and closing times of every silo window from the one containing `from` through `days`. */
+export const getResourceSiloBoundaries = (from: Date, days = 7) => {
+  const boundaries: Date[] = [];
+  const until = from.getTime() + days * 86_400_000;
+  const interval = RESOURCE_SILO_INTERVAL_HOURS * 3_600_000;
+  for (
+    let at = getResourceSiloWindow(from).start.getTime();
+    at <= until;
+    at += interval
+  ) {
+    const window = getResourceSiloWindow(new Date(at));
+    if (window.active) boundaries.push(window.start, window.end);
+  }
+  return boundaries;
+};
