@@ -43,6 +43,7 @@ it.each([
       raids: await listDiscordRaids(database),
       wars: [],
       territories: [],
+      silo: null,
       enabledAt: { raids: new Date(0) },
       observed: new Set(),
       now,

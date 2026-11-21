@@ -1,15 +1,16 @@
 # Discord event alerts
 
-Players select any combination of three optional roles in Discord: **Raids**, **Wars**,
-and **Territory Wars**. These roles are independent of account linking and village roles.
-The game posts alerts through one incoming webhook; it does not assign these roles.
+Players select any combination of four optional roles in Discord: **Raids**, **Wars**,
+**Territory Wars** and **Resource Silos**. These roles are independent of account linking
+and village roles. The game posts alerts through one incoming webhook; it does not assign
+these roles.
 
 ## Discord server setup
 
-Apply the schema migration creating `DiscordEventDelivery` and adding `Quest.raidStartedAt`
-before deploying the minute job.
+Apply the schema migrations creating `DiscordEventDelivery`, adding its `silos` category and
+adding `Quest.raidStartedAt` before deploying the minute job.
 
-1. Create three roles without administrative permissions. Expose them as optional choices
+1. Create four roles without administrative permissions. Expose them as optional choices
    in Discord's Channels & Roles onboarding, or the server's existing self-role system.
    Do not assign them automatically to all members.
 2. Allow the webhook to mention these roles (make them mentionable, or grant its integration
@@ -22,6 +23,7 @@ before deploying the minute job.
    | `DISCORD_RAIDS_ROLE_ID` | Raids role ID |
    | `DISCORD_WARS_ROLE_ID` | Wars role ID |
    | `DISCORD_TERRITORY_WARS_ROLE_ID` | Territory Wars role ID |
+   | `DISCORD_RESOURCE_SILOS_ROLE_ID` | Resource Silos role ID |
 
    Enable Developer Mode in Discord to copy role IDs. An omitted role disables its category;
    an omitted webhook disables all event alerts. Never expose the webhook token publicly.
@@ -41,6 +43,9 @@ and [allowed mentions](https://docs.discord.com/developers/resources/message#all
   event's actual resolution plus `TERRITORY_WAR_INTERVAL_HOURS`. Start alerts name the
   selected sector; end alerts include every rewarded winner, or explain that nobody scored.
   The initial event has no predecessor from which to calculate a warning.
+- Resource Silos: each weekend silo window (`getResourceSiloWindow`) is announced once when it
+  opens, with the War-Torn sector and its closing time. Windows have a fixed schedule and no
+  end alert. Nothing is posted while no silo reward has a drop chance.
 
 The minute job reads committed state after territory maintenance. It uses deterministic
 `GameSetting` IDs prefixed with `discord-event:` for category activation markers. Immutable

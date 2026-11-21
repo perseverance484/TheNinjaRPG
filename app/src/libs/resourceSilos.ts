@@ -47,3 +47,8 @@ export const rollResourceSiloRewards = (
   const drops = entries.filter((entry) => random() * 100 < entry.chance);
   return { drops, rewards: collapseRewards(drops.map((entry) => entry.rewards)) };
 };
+
+/** A silo can be claimed, and is worth announcing, only once some entry has a drop chance. */
+export const hasResourceSiloRewards = <T extends { entries: ResourceSiloEntryType[] }>(
+  config: T | undefined,
+): config is T => !!config?.entries.some((entry) => entry.chance > 0);

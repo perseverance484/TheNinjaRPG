@@ -1,6 +1,10 @@
 import { describe, expect, it } from "bun:test";
-import { TERRITORY_WAR_INTERVAL_HOURS } from "@/drizzle/constants";
+import {
+  MAP_WAR_TORN_BATTLEGROUND_SECTOR,
+  TERRITORY_WAR_INTERVAL_HOURS,
+} from "@/drizzle/constants";
 import { buildDiscordEvents, discordEventKey } from "@/libs/discordEvents";
+import { getResourceSiloWindow } from "@/utils/time";
 
 const now = new Date("2026-10-29T12:00:00Z");
 const earlier = new Date(now.getTime() - 60_000);
@@ -8,7 +12,8 @@ const input = () => ({
   raids: [],
   wars: [],
   territories: [],
-  enabledAt: { raids: earlier, wars: earlier, territory: earlier },
+  silo: null,
+  enabledAt: { raids: earlier, wars: earlier, territory: earlier, silos: earlier },
   observed: new Set<string>(),
   now,
 });
@@ -157,6 +162,35 @@ describe("Discord event messages", () => {
       });
       expect(result.some((event) => event.id.endsWith(":warning"))).toBe(expected);
     }
+  });
+  it("announces each open silo window once, with its sector and close time", () => {
+    // Friday 2026-10-30 12:30 UTC falls in the 12:00-13:00 window.
+    const window = getResourceSiloWindow(new Date("2026-10-30T12:30:00Z"));
+    const result = buildDiscordEvents({ ...input(), silo: window });
+    expect(result).toHaveLength(1);
+    expect(result[0]?.category).toBe("silos");
+    expect(result[0]?.id).toBe(`${discordEventKey("silos", window.id)}:open`);
+    expect(result[0]?.message).toContain(`sector ${MAP_WAR_TORN_BATTLEGROUND_SECTOR}`);
+    expect(result[0]?.message).toContain(
+      `<t:${Math.floor(window.end.getTime() / 1000)}:R>`,
+    );
+    const later = getResourceSiloWindow(new Date("2026-10-30T15:30:00Z"));
+    expect(buildDiscordEvents({ ...input(), silo: later })[0]?.id).not.toBe(
+      result[0]?.id,
+    );
+  });
+  it("stays quiet while the silo is closed, unconfigured or its alerts are off", () => {
+    // Friday 13:30 UTC is between windows; Wednesday 12:30 UTC is a weekday.
+    for (const time of ["2026-10-30T13:30:00Z", "2026-10-28T12:30:00Z"]) {
+      const silo = getResourceSiloWindow(new Date(time));
+      expect(silo.active).toBe(false);
+      expect(buildDiscordEvents({ ...input(), silo })).toEqual([]);
+    }
+    const open = getResourceSiloWindow(new Date("2026-10-30T12:30:00Z"));
+    expect(buildDiscordEvents({ ...input(), silo: null })).toEqual([]);
+    expect(
+      buildDiscordEvents({ ...input(), silo: open, enabledAt: { raids: earlier } }),
+    ).toEqual([]);
   });
   it("neutralizes name formatting and suppresses disabled categories", () => {
     const result = buildDiscordEvents({

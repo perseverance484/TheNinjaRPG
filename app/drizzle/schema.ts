@@ -5494,7 +5494,7 @@ export const discordEventDelivery = mysqlTable(
   "DiscordEventDelivery",
   {
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
-    category: mysqlEnum("category", ["raids", "wars", "territory"]).notNull(),
+    category: mysqlEnum("category", ["raids", "wars", "territory", "silos"]).notNull(),
     message: text("message").notNull(),
     createdAt: datetime("createdAt", { mode: "date", fsp: 3 }).notNull(),
     claimedAt: datetime("claimedAt", { mode: "date", fsp: 3 }),

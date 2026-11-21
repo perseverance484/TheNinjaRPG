@@ -4,6 +4,7 @@ import {
   discordEventDelivery,
   gameSetting,
   quest,
+  resourceSilo,
   territoryWar,
   territoryWarScore,
   userData,
@@ -49,6 +50,7 @@ restoreEnvAfterEach(
   "DISCORD_RAIDS_ROLE_ID",
   "DISCORD_WARS_ROLE_ID",
   "DISCORD_TERRITORY_WARS_ROLE_ID",
+  "DISCORD_RESOURCE_SILOS_ROLE_ID",
 );
 const now = new Date("2026-10-29T12:00:00Z");
 let posts: ReturnType<typeof vi.spyOn<typeof globalThis, "fetch">>;
@@ -57,6 +59,7 @@ beforeEach(() => {
   env.DISCORD_RAIDS_ROLE_ID = "111";
   env.DISCORD_WARS_ROLE_ID = "222";
   env.DISCORD_TERRITORY_WARS_ROLE_ID = "333";
+  env.DISCORD_RESOURCE_SILOS_ROLE_ID = "444";
   posts = vi
     .spyOn(globalThis, "fetch")
     .mockResolvedValue(new Response('{"id":"confirmed"}'));
@@ -84,6 +87,12 @@ it("fails closed for missing roles, non-Discord URLs and non-HTTPS webhooks", ()
     expect(discordEventConfig()).toBeNull();
   }
 });
+it("enables Resource Silo alerts from their own role alone", () => {
+  delete env.DISCORD_RAIDS_ROLE_ID;
+  delete env.DISCORD_WARS_ROLE_ID;
+  delete env.DISCORD_TERRITORY_WARS_ROLE_ID;
+  expect(discordEventConfig()?.roles).toEqual({ silos: "444" });
+});
 it("does no database/network work under the test runner", async () => {
   await syncDiscordEvents(null as never, now);
   expect(posts).not.toHaveBeenCalled();
@@ -95,6 +104,7 @@ describeWithDatabase("Discord event delivery receipts", () => {
       discordEventDelivery,
       gameSetting,
       quest,
+      resourceSilo,
       territoryWarScore,
       territoryWar,
       war,
@@ -132,6 +142,37 @@ describeWithDatabase("Discord event delivery receipts", () => {
     expect(String(posts.mock.calls[0]![0])).toContain("wait=true");
     const payload = JSON.parse(String(posts.mock.calls[0]![1]?.body));
     expect(payload.allowed_mentions.roles).toEqual(["111"]);
+  });
+  it("announces each configured silo opening once to the silo role", async () => {
+    const db = await getTestDatabase();
+    env.NODE_ENV = "development";
+    const entry = {
+      kind: "package" as const,
+      sourceId: "supplies",
+      name: "Supplies",
+      chance: 0,
+      rewards: ObjectiveReward.parse({}),
+    };
+    await db
+      .insert(resourceSilo)
+      .values({ id: "war-torn", updatedAt: now, entries: [entry] });
+    // Friday 2026-10-30: windows open at 12:00 and 15:00 UTC and last one hour.
+    const friday = (time: string) => new Date(`2026-10-30T${time}:00Z`);
+    await syncDiscordEvents(db, friday("12:05"));
+    expect(posts).not.toHaveBeenCalled();
+    await db.update(resourceSilo).set({ entries: [{ ...entry, chance: 100 }] });
+    await Promise.all([
+      syncDiscordEvents(db, friday("12:06")),
+      syncDiscordEvents(db, friday("12:06")),
+    ]);
+    await syncDiscordEvents(db, friday("12:30"));
+    await syncDiscordEvents(db, friday("13:30"));
+    expect(posts).toHaveBeenCalledTimes(1);
+    const payload = JSON.parse(String(posts.mock.calls[0]![1]?.body));
+    expect(payload.allowed_mentions.roles).toEqual(["444"]);
+    expect(payload.content).toContain("sector 335");
+    await syncDiscordEvents(db, friday("15:00"));
+    expect(posts).toHaveBeenCalledTimes(2);
   });
   it("retries rejected posts and stale leases without consuming delivery", async () => {
     const db = await seed();

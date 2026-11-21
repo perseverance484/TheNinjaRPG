@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import {
   EXCLUSIVE_RAID_DURATION_HOURS,
+  MAP_WAR_TORN_BATTLEGROUND_SECTOR,
   TERRITORY_WAR_INTERVAL_HOURS,
 } from "@/drizzle/constants";
 import type { DiscordEventDelivery, Quest, TerritoryWar, War } from "@/drizzle/schema";
@@ -26,6 +27,8 @@ type Conflict = Pick<
   attackerVillage: { name: string };
   defenderVillage: { name: string };
 };
+/** The current silo window, or null when no silo rewards are configured to claim. */
+type SiloWindow = { active: boolean; id: string; end: Date } | null;
 
 /**
  * Build lifecycle alerts from committed snapshots without database or network work.
@@ -35,6 +38,7 @@ export const buildDiscordEvents = ({
   raids,
   wars,
   territories,
+  silo,
   enabledAt,
   observed,
   now,
@@ -42,6 +46,7 @@ export const buildDiscordEvents = ({
   raids: Raid[];
   wars: Conflict[];
   territories: (TerritoryWar & { winners: string[] })[];
+  silo: SiloWindow;
   enabledAt: Partial<Record<DiscordEventCategory, Date>>;
   observed: Set<string>;
   now: Date;
@@ -167,6 +172,16 @@ export const buildDiscordEvents = ({
           message: `The next Territory War starts <t:${Math.floor(next / 1000)}:R> (<t:${Math.floor(next / 1000)}:F>)! https://www.theninja-rpg.com/territory-war`,
         });
     }
+  }
+  // Silo windows follow a fixed schedule, so only the opening is announced, with its close time.
+  // ":open" rather than ":start": receipts keep starts until an end, which silos never post.
+  if (enabledAt.silos && silo?.active) {
+    const closes = Math.floor(silo.end.getTime() / 1000);
+    events.push({
+      id: `${discordEventKey("silos", silo.id)}:open`,
+      category: "silos",
+      message: `The Resource Silo is open at the War-Torn shrine in **sector ${MAP_WAR_TORN_BATTLEGROUND_SECTOR}** until <t:${closes}:t> (<t:${closes}:R>)! https://www.theninja-rpg.com/travel`,
+    });
   }
   return events;
 };

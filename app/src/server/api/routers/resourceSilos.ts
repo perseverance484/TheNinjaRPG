@@ -10,7 +10,7 @@ import { getWarSide } from "@/libs/objectiveWar";
 import { getServerPusher, updateUserOnMap } from "@/libs/pusher";
 import { boostPvpRewards, getPvpBoost } from "@/libs/pvpExperience";
 import { type GetRewardResult, postProcessRewards } from "@/libs/quest/rewards";
-import { rollResourceSiloRewards } from "@/libs/resourceSilos";
+import { hasResourceSiloRewards, rollResourceSiloRewards } from "@/libs/resourceSilos";
 import { getSectorShrinePosition } from "@/libs/sector-map/structures";
 import { findNearestReachableCoordinate } from "@/libs/sector-map/validation";
 import { isWeightedCacheEffect } from "@/libs/weightedCache";
@@ -74,7 +74,7 @@ export const resourceSilosRouter = createTRPCRouter({
       window,
       points: progress?.points ?? 0,
       claimed: progress?.claimed ?? false,
-      configured: !!config?.entries.some((entry) => entry.chance > 0),
+      configured: hasResourceSiloRewards(config),
     };
   }),
   /** Load staff catalog choices once so cache-effect filtering stays in memory. */
@@ -195,7 +195,7 @@ export const resourceSilosRouter = createTRPCRouter({
         "You must be awake in the War-Torn Sector to unlock the silo",
       );
     if (!window.active) return errorResponse("The resource silo is closed");
-    if (!config?.entries.some((entry) => entry.chance > 0))
+    if (!hasResourceSiloRewards(config))
       return errorResponse("No resource silo rewards are configured");
     if (
       user.resourceSiloProgress?.windowId !== window.id ||

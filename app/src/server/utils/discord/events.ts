@@ -1,4 +1,5 @@
 import { buildDiscordEvents, type DiscordEventCategory } from "@/libs/discordEvents";
+import { hasResourceSiloRewards } from "@/libs/resourceSilos";
 import { isExternalPostingDisabled, isValidDiscordWebhook } from "@/libs/socials";
 import {
   claimDiscordEventDelivery,
@@ -13,13 +14,16 @@ import {
   listPendingDiscordEvents,
   DISCORD_EVENT_PREFIX as PREFIX,
 } from "@/queries/discordEvents";
+import { findResourceSilo } from "@/queries/resourceSilos";
 import type { DrizzleClient } from "@/server/db";
+import { getResourceSiloWindow } from "@/utils/time";
 
 const LEASE_MS = 120_000;
 const ROLE_ENV = {
   raids: "DISCORD_RAIDS_ROLE_ID",
   wars: "DISCORD_WARS_ROLE_ID",
   territory: "DISCORD_TERRITORY_WARS_ROLE_ID",
+  silos: "DISCORD_RESOURCE_SILOS_ROLE_ID",
 } as const;
 
 /** Validate the webhook and collect only explicitly configured opt-in category roles. */
@@ -56,12 +60,15 @@ export const syncDiscordEvents = async (client: DrizzleClient, now = new Date())
   const categories = Object.keys(config.roles) as DiscordEventCategory[];
   // Per-category activation markers prevent completed history from being replayed.
   await initializeDiscordEvents(client, categories, now);
-  const [markers, receipts, raids, wars, territories] = await Promise.all([
+  const siloWindow = getResourceSiloWindow(now);
+  const [markers, receipts, raids, wars, territories, silo] = await Promise.all([
     listDiscordEventMarkers(client),
     listDiscordEventReceipts(client, now),
     config.roles.raids ? listDiscordRaids(client) : [],
     config.roles.wars ? listDiscordWars(client) : [],
     config.roles.territory ? listDiscordTerritoryWars(client) : [],
+    // The schedule is fixed; read the reward table only while a window is open.
+    config.roles.silos && siloWindow.active ? findResourceSilo(client) : undefined,
   ]);
   const activations = new Map(
     markers.map((marker) => [marker.id.slice(PREFIX.length), marker.time]),
@@ -73,6 +80,7 @@ export const syncDiscordEvents = async (client: DrizzleClient, now = new Date())
     raids,
     wars,
     territories,
+    silo: hasResourceSiloRewards(silo) ? siloWindow : null,
     enabledAt,
     observed: new Set(receipts.map((receipt) => receipt.id)),
     now,

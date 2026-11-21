@@ -42,6 +42,7 @@ export const serverSchema = z.object({
   DISCORD_RAIDS_ROLE_ID: z.union([z.string().regex(/^\d{1,20}$/), z.literal("")]).optional(),
   DISCORD_WARS_ROLE_ID: z.union([z.string().regex(/^\d{1,20}$/), z.literal("")]).optional(),
   DISCORD_TERRITORY_WARS_ROLE_ID: z.union([z.string().regex(/^\d{1,20}$/), z.literal("")]).optional(),
+  DISCORD_RESOURCE_SILOS_ROLE_ID: z.union([z.string().regex(/^\d{1,20}$/), z.literal("")]).optional(),
   /**
    * Discord account linking with Linked Roles (docs/DiscordLinking.md). Stays off unless
    * DISCORD_LINKING_ENABLED is "true" and the application, bot, guild and encryption key
@@ -179,6 +180,7 @@ export const serverEnv = {
   DISCORD_RAIDS_ROLE_ID: process.env.DISCORD_RAIDS_ROLE_ID,
   DISCORD_WARS_ROLE_ID: process.env.DISCORD_WARS_ROLE_ID,
   DISCORD_TERRITORY_WARS_ROLE_ID: process.env.DISCORD_TERRITORY_WARS_ROLE_ID,
+  DISCORD_RESOURCE_SILOS_ROLE_ID: process.env.DISCORD_RESOURCE_SILOS_ROLE_ID,
   DISCORD_LINKING_ENABLED: /** @type {"true" | "false" | undefined} */ (
     process.env.DISCORD_LINKING_ENABLED
   ),

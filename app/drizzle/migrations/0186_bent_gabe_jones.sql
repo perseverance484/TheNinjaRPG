@@ -1,0 +1,1 @@
+ALTER TABLE `DiscordEventDelivery` MODIFY COLUMN `category` enum('raids','wars','territory','silos') NOT NULL;
