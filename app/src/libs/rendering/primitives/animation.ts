@@ -1,5 +1,9 @@
 import { Rectangle, Sprite, Texture } from "pixi.js";
-import { type AnimationClip, sampleAnimationClip } from "@/libs/rendering/animation";
+import {
+  type AnimationClip,
+  sampleAnimationClip,
+  sheetLayout,
+} from "@/libs/rendering/animation";
 import {
   readTextureFramePixels,
   stabilizeNearestTexture,
@@ -24,18 +28,23 @@ export const createClipTextures = async (
   );
   if (game.isDisposed() || game.signal.aborted)
     throw new DOMException("Animation cancelled", "AbortError");
+  // An effect sheet's layout is measured from the native sheet: a strip or a grid (sheetLayout).
+  const { columns, rows } =
+    clip.measured && sources.length === 1 && sources[0]
+      ? sheetLayout(sources[0].width, sources[0].height, clip.frameCount)
+      : clip;
   const views = Array.from({ length: clip.frameCount }, (_, index) => {
     const source = sources.length === 1 ? sources[0] : sources[index];
     if (!source) throw new Error(`Animation source ${index} is missing`);
     const frame = sources.length === 1 ? index : 0;
-    const width = source.width / clip.columns,
-      height = source.height / clip.rows;
+    const width = source.width / columns,
+      height = source.height / rows;
     return stabilizeNearestTexture(
       new Texture({
         source: source.source,
         frame: new Rectangle(
-          (frame % clip.columns) * width,
-          Math.floor(frame / clip.columns) * height,
+          (frame % columns) * width,
+          Math.floor(frame / columns) * height,
           width,
           height,
         ),

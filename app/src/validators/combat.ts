@@ -1022,8 +1022,20 @@ export const SummonTag = z.object({
   calculation: z.enum(["percentage"]).prefault("percentage"),
 });
 
+/** Clips repeat on every tile up to this size; only a visual on the user may go larger. */
+export const MAX_TILE_ANIMATION_SCALE = 3;
+/** A visual on the user may cover the whole area around them (range 4 needs about 13). */
+export const MAX_SELF_VISUAL_SCALE = 15;
+
+/** The largest animationScale a tag may use: a visual on the user, or anything else. */
+export const animationScaleLimit = (tag: { type?: unknown; target?: unknown }) =>
+  tag.type === "visual" && tag.target === "SELF"
+    ? MAX_SELF_VISUAL_SCALE
+    : MAX_TILE_ANIMATION_SCALE;
+
 export const VisualTag = z.object({
   ...BaseAttributes,
+  animationScale: z.coerce.number().min(1).max(MAX_SELF_VISUAL_SCALE).prefault(1),
   type: tagType("visual"),
   description: msg("A battlefield visual effect"),
 });
@@ -1291,6 +1303,21 @@ export const SuperRefineAnimationAlternate = (
   });
 };
 
+/** A visual above tile size plays once on the user; elsewhere it would repeat on every tile. */
+export const SuperRefineAnimationScale = (
+  effects: Pick<ZodAllTags, "type" | "target" | "animationScale">[],
+  ctx: z.RefinementCtx,
+) => {
+  effects.forEach((e, index) => {
+    if (e.type === "visual" && (e.animationScale ?? 1) > animationScaleLimit(e))
+      ctx.addIssue({
+        code: "custom",
+        path: [index, "animationScale"],
+        message: `Only a visual on the user (target SELF) can be larger than ${MAX_TILE_ANIMATION_SCALE}x.`,
+      });
+  });
+};
+
 /** Validate full combat tags against the permitted list and require an opening-round duration. */
 export const questStartingEffectsSchema = (types: readonly string[]) =>
   z
@@ -1313,6 +1340,7 @@ export const questStartingEffectsSchema = (types: readonly string[]) =>
       });
     })
     .superRefine(SuperRefineAnimationAlternate)
+    .superRefine(SuperRefineAnimationScale)
     .prefault([]);
 
 export type EffectType = (typeof tagTypes)[number];
@@ -1800,6 +1828,7 @@ const SuperRefineJutsu = (
  */
 export const SuperRefineEffects = (effects: ZodAllTags[], ctx: z.RefinementCtx) => {
   SuperRefineAnimationAlternate(effects, ctx);
+  SuperRefineAnimationScale(effects, ctx);
   effects.forEach((e, index) => {
     if (e.target === "COORDINATES" && !e.coordinateTargeting) {
       ctx.addIssue({

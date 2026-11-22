@@ -125,6 +125,7 @@ import { secondsFromDate } from "@/utils/time";
 import {
   AllTags,
   SuperRefineAnimationAlternate,
+  SuperRefineAnimationScale,
   SuperRefinePassiveEffects,
 } from "@/validators/combat";
 import type { RaidObjectiveType } from "@/validators/objectives";
@@ -139,6 +140,7 @@ const damageThresholdFields = {
     .array(AllTags)
     .superRefine(SuperRefinePassiveEffects)
     .superRefine(SuperRefineAnimationAlternate)
+    .superRefine(SuperRefineAnimationScale)
     .prefault([]),
   effectDurationMinutes: z.number().min(1).max(10080).prefault(60),
 };

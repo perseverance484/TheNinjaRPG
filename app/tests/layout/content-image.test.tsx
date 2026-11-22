@@ -53,3 +53,49 @@ it("keeps the caller's other classes on the art, such as its rounding", () => {
   );
   expect(art(view)?.className.split(" ")).toContain("rounded-lg");
 });
+
+it("crops grid sheets cell by cell, row by row", () => {
+  const draws: number[][] = [];
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({
+    clearRect: () => {},
+    drawImage: (_image: unknown, ...rect: number[]) => draws.push(rect.slice(0, 4)),
+  } as never);
+  const sheets: { onload: (() => void) | null; width: number; height: number }[] = [];
+  const original = globalThis.Image;
+  globalThis.Image = class {
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+    width = 3 * 100;
+    height = 2 * 100;
+    src = "";
+    constructor() {
+      sheets.push(this);
+    }
+  } as unknown as typeof Image;
+  const frames: FrameRequestCallback[] = [];
+  vi.spyOn(window, "requestAnimationFrame").mockImplementation((step) => {
+    frames.push(step);
+    return frames.length;
+  });
+  try {
+    render(
+      <ContentImage
+        image="/grid.webp"
+        alt="Grid"
+        className="h-12 w-12"
+        frames={5}
+        speed={10}
+      />,
+    );
+    sheets[0]!.onload?.();
+    expect(draws.at(-1)).toEqual([0, 0, 100, 100]);
+    frames.shift()!(0);
+    frames.shift()!(35);
+    // Frame 3 starts the second row.
+    expect(draws.at(-1)).toEqual([0, 100, 100, 100]);
+    frames.shift()!(45);
+    expect(draws.at(-1)).toEqual([100, 100, 100, 100]);
+  } finally {
+    globalThis.Image = original;
+  }
+});

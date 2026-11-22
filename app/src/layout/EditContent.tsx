@@ -2428,7 +2428,7 @@ export const FORM_LABEL_MAP: Record<string, string> = {
   tagType: "Combat Tag Type",
   singleBattle: "Track best single-battle only (else cumulative)",
   bloodlineRanks: "Bloodline ranks to include",
-  animationScale: "Animation scale (1–3×)",
+  animationScale: "Animation scale (1–3×; a visual on the user up to 15×)",
   projectileScale: "Projectile size (0.25–3×; default 1×)",
   animationOffsetY: "Animation height (hexes; positive raises)",
   animationStagger: "Animation stagger (ms, 0–1000)",

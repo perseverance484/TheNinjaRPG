@@ -130,6 +130,21 @@ describe("battlefieldSceneOf", () => {
       expect(scene?.effects[0]?.animationScale).toBe(1);
     },
   );
+  it("previews a visual on the user at its size above 3x, and other tags at 1", () => {
+    const visual = (target: string) => ({
+      ...tag({ appearAnimation: "storm" }, target),
+      type: "visual",
+      animationScale: 13,
+    });
+    const scene = battlefieldSceneOf("JUTSU", "wide", {
+      effects: [
+        visual("SELF"),
+        visual("INHERIT"),
+        { ...visual("SELF"), type: "damage" },
+      ],
+    });
+    expect(scene?.effects.map((effect) => effect.animationScale)).toEqual([13, 1, 1]);
+  });
   it("carries tile variation, so a variation-only change alters the scene", () => {
     const base = { target: "GROUND", effects: [tag({ appearAnimation: "hit" })] };
     const varied = {

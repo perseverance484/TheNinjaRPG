@@ -2,6 +2,7 @@ import { describe, expect, it } from "bun:test";
 import {
   assetAnimationClip,
   sampleAnimationClip,
+  sheetLayout,
   walkDuration,
   walkProgress,
 } from "@/libs/rendering/animation";
@@ -27,6 +28,29 @@ describe("shared animation clips", () => {
     const clip = assetAnimationClip({ image: "effect.png", frames: 8, speed: 60 });
     expect(sampleAnimationClip(clip, 200, true)).toEqual({ index: 0, finished: false });
     expect(sampleAnimationClip(clip, 480, true)).toEqual({ index: 0, finished: true });
+  });
+});
+
+describe("effect sheet layout", () => {
+  it("reads a sheet one frame wide as a vertical strip", () => {
+    expect(sheetLayout(128, 128 * 32, 32)).toEqual({ columns: 1, rows: 32 });
+    expect(sheetLayout(50, 50 * 8, 8)).toEqual({ columns: 1, rows: 8 });
+    expect(sheetLayout(64, 64, 1)).toEqual({ columns: 1, rows: 1 });
+  });
+  it("reads a wider sheet of square cells as a grid, row by row", () => {
+    expect(sheetLayout(7 * 384, 7 * 384, 45)).toEqual({ columns: 7, rows: 7 });
+    expect(sheetLayout(7 * 384, 6 * 384, 41)).toEqual({ columns: 7, rows: 6 });
+    expect(sheetLayout(3 * 100, 100, 3)).toEqual({ columns: 3, rows: 1 });
+    // a 50 px rendition of the 7 x 6 grid rounds its height to 43 px
+    expect(sheetLayout(50, 43, 41)).toEqual({ columns: 7, rows: 6 });
+    // 96 frames of 32 px in 64 columns and two rows: 63 columns is also within tolerance
+    expect(sheetLayout(2048, 64, 96)).toEqual({ columns: 64, rows: 2 });
+  });
+  it("reads sheets that match no grid as vertical strips", () => {
+    expect(sheetLayout(100, 700, 8)).toEqual({ columns: 1, rows: 8 });
+    // a strip of four frames, each four times as wide as tall, is not read as two columns
+    expect(sheetLayout(4, 4, 4)).toEqual({ columns: 1, rows: 4 });
+    expect(sheetLayout(0, 0, 8)).toEqual({ columns: 1, rows: 8 });
   });
 });
 

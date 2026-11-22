@@ -1,6 +1,7 @@
+import { z } from "zod";
 import { AttackMethods, type ContentProposalEntityType } from "@/drizzle/constants";
 import type { CombatAction } from "@/libs/combat/types";
-import { VisualTag } from "@/validators/combat";
+import { animationScaleLimit } from "@/validators/combat";
 import {
   type CoordinateTargeting,
   coordinateTargetingSchema,
@@ -35,7 +36,12 @@ export const battlefieldSceneOf = (
       };
       if (!Object.values(media).some(Boolean)) return [];
       // Preview drafts remain drawable while the editor reports invalid sizing.
-      const scale = VisualTag.shape.animationScale.safeParse(tag.animationScale);
+      const scale = z.coerce
+        .number()
+        .min(1)
+        .max(animationScaleLimit(tag))
+        .prefault(1)
+        .safeParse(tag.animationScale);
       const placement = placementOf(text(tag.target) || "INHERIT");
       const method = AttackMethods.find((method) => method === fields.method);
       const methodSize = methodSizeSchema.safeParse(fields.methodSize);

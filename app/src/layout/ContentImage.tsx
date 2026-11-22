@@ -10,6 +10,7 @@ import {
 import type { ItemRarity } from "@/drizzle/schema";
 import NextImage from "@/layout/Image";
 import Loader from "@/layout/Loader";
+import { sheetLayout } from "@/libs/rendering/animation";
 import { cn } from "@/libs/shadui";
 
 interface ContentImageProps {
@@ -38,7 +39,7 @@ interface ContentImageProps {
   onError?: () => void;
 }
 
-/** Render static artwork or a vertical sprite sheet, respecting explicit playback state. */
+/** Render static artwork or an effect sheet (strip or grid), respecting explicit playback state. */
 const ContentImage: React.FC<ContentImageProps> = (props) => {
   // The image to show
   const imgRef = useRef<HTMLCanvasElement>(null);
@@ -55,13 +56,19 @@ const ContentImage: React.FC<ContentImageProps> = (props) => {
       const speed = props.speed;
       const drawFrame = (frame: number) => {
         if (!ctx) return;
-        const height = spritesheet.height / frames;
+        const { columns, rows } = sheetLayout(
+          spritesheet.width,
+          spritesheet.height,
+          frames,
+        );
+        const width = spritesheet.width / columns;
+        const height = spritesheet.height / rows;
         ctx.clearRect(0, 0, pixels, pixels);
         ctx.drawImage(
           spritesheet,
-          0,
-          frame * height,
-          spritesheet.width,
+          (frame % columns) * width,
+          Math.floor(frame / columns) * height,
+          width,
           height,
           0,
           0,

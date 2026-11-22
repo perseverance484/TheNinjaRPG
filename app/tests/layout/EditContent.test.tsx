@@ -1485,7 +1485,9 @@ describe("effect drafts", () => {
       );
     };
     const view = render(<Fixture />);
-    const input = view.getByLabelText("Animation scale (1–3×)");
+    const input = view.getByLabelText(
+      "Animation scale (1–3×; a visual on the user up to 15×)",
+    );
     expect((input as HTMLInputElement).value).toBe("1");
     await act(async () => {});
     expect(onChange).not.toHaveBeenCalled();
@@ -3011,7 +3013,7 @@ describe("schema-derived field visibility", () => {
         "Alternate appear animation",
         "Disappear animation",
         "Projectile animation",
-        "Animation scale (1–3×)",
+        "Animation scale (1–3×; a visual on the user up to 15×)",
         "Projectile size (0.25–3×; default 1×)",
         "Animation height (hexes; positive raises)",
         "Ground style",
@@ -3051,7 +3053,7 @@ describe("schema-derived field visibility", () => {
         "Alternate appear animation",
         "Disappear animation",
         "Projectile animation",
-        "Animation scale (1–3×)",
+        "Animation scale (1–3×; a visual on the user up to 15×)",
         "Projectile size (0.25–3×; default 1×)",
         "Animation height (hexes; positive raises)",
         "Ground style",

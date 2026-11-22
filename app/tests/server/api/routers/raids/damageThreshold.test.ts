@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import { raidsRouter } from "@/server/api/routers/raids";
-import { IncreaseStatTag } from "@/validators/combat";
+import { IncreaseStatTag, VisualTag } from "@/validators/combat";
 import { ObjectiveReward } from "@/validators/rewards";
 import { stubRateLimitTransport } from "../../../../setup/rateLimit";
 import { resetServerModuleStubs, stubProfile } from "../../../../setup/serverModules";
@@ -101,5 +101,32 @@ describe("raid damage threshold effects", () => {
         effects: [{ ...orphan, appearAnimation: "base" }],
       }),
     ).toMatchObject({ success: true });
+  });
+
+  it("lets only a visual on the user grow past tile size, on create and update", async () => {
+    const { caller, database } = makeCaller();
+    const onUser = VisualTag.parse({ target: "SELF", animationScale: 15 });
+    const everyTile = { ...onUser, target: "INHERIT" as const };
+    const create = (effects: (typeof onUser)[]) =>
+      caller.createDamageThreshold({
+        questId: "raid-quest",
+        damageRequired: 100,
+        rewards,
+        effects,
+      });
+    const update = (effects: (typeof onUser)[]) =>
+      caller.updateDamageThreshold({
+        thresholdId: "threshold",
+        damageRequired: 100,
+        sortOrder: 0,
+        rewards,
+        effects,
+      });
+    await expect(create([everyTile])).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(update([everyTile])).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    expect(database.insert).not.toHaveBeenCalled();
+    expect(database.update).not.toHaveBeenCalled();
+    expect(await create([onUser])).toMatchObject({ success: true });
+    expect(await update([onUser])).toMatchObject({ success: true });
   });
 });

@@ -158,7 +158,7 @@ function SingleEditAsset({
             </h3>
             <p className="text-muted-foreground mt-1 mb-4 text-sm">
               {type === "ANIMATION"
-                ? "Upload a vertical sprite sheet, then set its frame count and speed below."
+                ? "Upload a sheet of square frames, either one column top to bottom or a grid of at least three columns read row by row, then set its frame count and speed below."
                 : type === "SFX" || type === "MUSIC"
                   ? "Choose or generate audio. You can listen before saving."
                   : "Upload, replace or generate the artwork for this asset."}
