@@ -1,0 +1,144 @@
+TNR battle log -8fUXZVkSzL7gkIwFwqOn (2026-11-26 01:06-01:14 UTC)
+Ashutosh vs ShisuiUchiha. Pulled from the game API (combat.getBattleEntries), oldest first.
+Format: #version R<round> Actor: Action -> target tile | effects
+
+#3 R1 Ashutosh: Godstorm Mantle: Thunder-Crowned Bulwark -> H6
+  Ashutosh damage taken decreased by up to 35% for the next 2 rounds
+  Ashutosh damage given increased by up to 35% for the next 2 rounds
+#4 R1 Ashutosh: Godstorm Mantle: Sky-Splitting Wall -> J8
+  Ashutosh cannot be debuffed for the next 1 rounds
+  Ashutosh damage given increased by up to 35% for the next 2 rounds
+  ShisuiUchiha damage taken increased by up to 35% for the next 2 rounds
+#5 R1 Ashutosh: Paper Bombs -> J8
+  ShisuiUchiha damage taken increased by up to 15% for the next 2 rounds
+  ShisuiUchiha will take 20% of damage received as afterburn for the next 2 rounds
+#6 R1 ShisuiUchiha: Godstorm Mantle: Sky-Splitting Wall -> H6
+  ShisuiUchiha cannot be debuffed for the next 1 rounds
+  ShisuiUchiha damage given increased by up to 32.6% for the next 2 rounds
+  Ashutosh damage taken increased by up to 32.6% for the next 2 rounds
+#7 R1 ShisuiUchiha: Cyclone Palm Strike -> H6
+  Ashutosh damage given decreased by up to 30% for the next 2 rounds
+  Ashutosh damage taken increased by up to 30% for the next 2 rounds
+#8 R1 ShisuiUchiha: Stamina Pill II -> H6
+  ShisuiUchiha damage taken decreased by up to 15% for the next 2 rounds
+  Ashutosh damage taken increased by up to 15% for the next 2 rounds
+#9 R2 Ashutosh: Danse Macabre -> J8
+  ShisuiUchiha cannot be debuffed
+  ShisuiUchiha takes 925.36 damage [damage, Highest, None]
+  ShisuiUchiha takes 185.00 afterburn damage
+#10 R2 Ashutosh: Subaku Palace -> G4
+  Ashutosh marked the ground with decreasedamagegiven for the next 3 rounds
+  ShisuiUchiha damage given decreased by up to 25% for the next 1 rounds
+  Ashutosh damage given increased by up to 30% for the next 2 rounds
+#11 R2 ShisuiUchiha: Godstorm Mantle: Storm-God's Heart -> H6
+  Ashutosh cannot be debuffed
+  Ashutosh takes 792.41 damage [damage, Highest, Storm]
+#12 R2 ShisuiUchiha: Godstorm Mantle: Thunder-Crowned Bulwark -> L10
+  ShisuiUchiha damage taken decreased by up to 33.8% for the next 2 rounds
+  ShisuiUchiha damage given increased by up to 33.8% for the next 2 rounds
+#13 R3 Ashutosh: First Chakra Gate -> H6
+  Ashutosh damage taken decreased by up to 30% for the next 2 rounds
+  Ashutosh damage given increased by up to 30% for the next 2 rounds
+#14 R3 Ashutosh: Panacea -> H6
+  Ashutosh damage taken decreased by up to 25% for the next 2 rounds
+#15 R3 Ashutosh: Chakra Pill II -> H6
+  Ashutosh damage given increased by up to 15% for the next 2 rounds
+  Ashutosh damage given [Earth, Fire, Lightning, None, Water, Wind] increased by up to 15% for the next 2 rounds
+#16 R3 Ashutosh: Chakra Pill -> H6
+  Ashutosh damage given increased by up to 15% for the next 2 rounds
+  Ashutosh will steal 20% damage as health for the next 2 rounds
+#17 R3 ShisuiUchiha: Chakra Invigoration -> H8
+  ShisuiUchiha damage taken decreased by up to 25% for the next 2 rounds
+  ShisuiUchiha damage given increased by up to 30% for the next 2 rounds
+#18 R3 ShisuiUchiha: Clear -> H6
+  Ashutosh was cleared of all positive status effects
+#19 R4 Ashutosh: Godstorm Mantle: Tempest -> H8
+  Ashutosh damage given increased by up to 35% for the next 2 rounds
+  Ashutosh will steal 40% damage as health for the next 2 rounds
+  ShisuiUchiha will take 35% of damage received as afterburn for the next 2 rounds
+#20 R4 Ashutosh: Chakra Overflow -> H6
+  Ashutosh damage given increased by up to 35% for the next 2 rounds
+  Ashutosh damage given increased by up to 35% for the next 2 rounds
+#21 R4 Ashutosh: Defensive Stance -> H6
+  Ashutosh damage taken decreased by up to 15% for the next 1 rounds
+#22 R4 ShisuiUchiha: Godstorm Mantle: Raijin's Cage -> H6
+  Ashutosh is stunned [-20 AP] for the next 2 rounds
+  Ashutosh takes 874.81 damage [damage, Highest, Storm]
+#23 R4 ShisuiUchiha: Replacement Technique -> C10
+#24 R4 ShisuiUchiha: Panacea -> C10
+  ShisuiUchiha damage taken decreased by up to 25% for the next 2 rounds
+#25 R5 Ashutosh: Replacement Technique -> D9
+#26 R5 Ashutosh: Fire Release: Inferno -> C10
+  ShisuiUchiha damage taken increased by up to 30% for the next 2 rounds
+  ShisuiUchiha will take 30% of damage received as afterburn for the next 2 rounds
+#27 R5 Ashutosh: Paper Bombs -> C10
+  ShisuiUchiha damage taken increased by up to 15% for the next 2 rounds
+  ShisuiUchiha will take 20% of damage received as afterburn for the next 2 rounds
+#28 R5 ShisuiUchiha: Cleanse -> C10
+  ShisuiUchiha was cleared of all negative status effects
+#29 R5 ShisuiUchiha: Godstorm Mantle: Tempest -> D9
+  ShisuiUchiha damage given increased by up to 34.2% for the next 2 rounds
+  ShisuiUchiha will steal 39.2% damage as health for the next 2 rounds
+  Ashutosh will take 34.2% of damage received as afterburn for the next 2 rounds
+#30 R6 Ashutosh: Dragon King's Impact -> C10
+  Ashutosh damage given increased by up to 40% for the next 2 rounds
+  Ashutosh will take 20% of damage received as afterburn for the next 2 rounds
+  ShisuiUchiha will take 316.00 wound damage for the next 2 rounds
+  ShisuiUchiha takes 1267.85 damage [damage, Highest, Fire, None]
+  Ashutosh steals 557.70 damage as health
+#31 R6 Ashutosh: Elemental Kunai -> C10
+  ShisuiUchiha takes 557.85 damage [damage, Highest, Fire]
+  Ashutosh steals 245.30 damage as health
+#32 R6 ShisuiUchiha: Dragon King's Impact -> D9
+  ShisuiUchiha damage given increased by up to 40% for the next 2 rounds
+  ShisuiUchiha will take 20% of damage received as afterburn for the next 2 rounds
+  Ashutosh will take 230.00 wound damage for the next 2 rounds
+  Ashutosh takes 922.06 damage [damage, Highest, Fire, None]
+  Ashutosh takes 315.00 afterburn damage
+  ShisuiUchiha steals 397.10 damage as health
+#33 R6 ShisuiUchiha: Crimson Vein -> D9
+  Ashutosh damage taken increased by up to 30% for the next 2 rounds
+  ShisuiUchiha will steal 35% damage as health for the next 2 rounds
+#34 R7 Ashutosh: Eternal Darkness -> C10
+  ShisuiUchiha damage given decreased by up to 30% for the next 2 rounds
+  Ashutosh damage taken decreased by up to 30% for the next 2 rounds
+  Ashutosh takes 230.00 wound damage [wound, Highest, Fire]
+#35 R7 Ashutosh: Cleanse -> D9
+  Ashutosh was cleared of all negative status effects
+#36 R7 ShisuiUchiha: Inferno Dragon's Wrath -> D9
+  Ashutosh will take 361.00 wound damage for the next 2 rounds
+  Ashutosh takes 1032.70 damage [damage, Speed, Strength, Fire]
+  ShisuiUchiha steals 619.00 damage as health
+  ShisuiUchiha takes 316.00 wound damage [wound, Highest, Fire]
+#37 R7 ShisuiUchiha: Ink of the Void -> D9
+  Ashutosh takes 645.44 damage [damage, Highest, None]
+  ShisuiUchiha vamps 141 damage as health
+  ShisuiUchiha steals 246.00 damage as health
+  ShisuiUchiha heals 220 HP
+#38 R8 Ashutosh: The Remainder -> C10
+  ShisuiUchiha takes 480.95 damage [damage, Highest, None]
+  Ashutosh vamps 105 damage as health
+  ShisuiUchiha takes 96.00 afterburn damage
+  Ashutosh takes 361.00 wound damage
+  Ashutosh heals 220 HP
+#39 R8 Ashutosh: Fiend Fire -> C10
+  ShisuiUchiha will take 269.00 wound damage for the next 2 rounds
+  ShisuiUchiha takes 769.52 damage [damage, Highest, Fire]
+  ShisuiUchiha takes 153.00 afterburn damage
+#40 R8 ShisuiUchiha: Aqua Dragon Barrage -> D9
+  ShisuiUchiha will heal for the next 1 rounds
+  Ashutosh takes 377.07 damage [damage, Highest, Water]
+  ShisuiUchiha steals 144.10 damage as health
+  ShisuiUchiha takes 316.00 wound damage [wound, Highest, Fire]
+#41 R8 ShisuiUchiha: Weeping Testament -> D9
+  ShisuiUchiha has immunity to buff prevention for the next 2 rounds
+  ShisuiUchiha heals 220 HP
+  Ashutosh takes 416.63 damage [pierce, Highest, Shadow]
+  ShisuiUchiha steals 159.50 damage as health
+#42 R9 Ashutosh: Basic Heal -> D9
+  Ashutosh takes 361.00 wound damage
+#43 R9 ShisuiUchiha: Wait
+  ShisuiUchiha takes 269.00 wound damage
+  ShisuiUchiha heals 440 HP
+
+(Entries also logged "heals 0 SP / 0 CP" lines, omitted. No entries exist before version 3. The log ends at #43 with no knockout line; check the battle result separately.)
