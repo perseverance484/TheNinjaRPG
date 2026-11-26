@@ -1,0 +1,1377 @@
+[
+ {
+  "id": "wfMMdoIiHfud_gDybU8AY",
+  "createdAt": "2026-11-26T08:40:53.736Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 62,
+  "battleRound": 12,
+  "actionId": "osJq3k77YPGoFWgof12FQ",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Night's Testament: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member will be drained 75 of Chakra, Health, Stamina for 2 rounds for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless has immunity to buff prevention for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 416.63 damage",
+    "color": "red",
+    "types": [
+     "pierce",
+     "Highest",
+     "Shadow"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "vNt9cOTbGqqqMVa434UmP",
+  "createdAt": "2026-11-26T08:40:00.954Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 61,
+  "battleRound": 12,
+  "actionId": "wait",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "ANBU Member stands and does nothing. ",
+  "appliedEffects": []
+ },
+ {
+  "id": "rusbhwAxpiYZBOxD8WUWx",
+  "createdAt": "2026-11-26T08:39:00.046Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 60,
+  "battleRound": 11,
+  "actionId": "dY00WA51Mr7-uS6zbcS3r",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Elemental Kunai: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member takes 226.45 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Lightning"
+    ]
+   },
+   {
+    "txt": "dauntless takes 90.00 recoil damage",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless steals 79.00 damage as health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "yMyOA-a7oo1w1BMBThIDy",
+  "createdAt": "2026-11-26T08:38:57.230Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 59,
+  "battleRound": 11,
+  "actionId": "K0t6Z-Q4lau1jFt8Tkpot",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Ethereal Rebirth: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will absorb up to 35% damage and convert it to Health for the next 3 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 648.46 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "None"
+    ]
+   },
+   {
+    "txt": "dauntless takes 259.00 recoil damage",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless steals 226.00 damage as health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "Re11YBRrLWsPVXhGErO9a",
+  "createdAt": "2026-11-26T08:38:54.841Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 58,
+  "battleRound": 11,
+  "actionId": "replacementTechnique",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Replacement Technique: [flavour text trimmed] on <b>I7</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "ri8Y9CCD7Rbzwl1qo8O46",
+  "createdAt": "2026-11-26T08:38:31.237Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 56,
+  "battleRound": 11,
+  "actionId": "GAyHRgaa1lkYGhE9WxlRL",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Phantom Step: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member marked the ground with decreasedamagetaken for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is decreased by up to 20% for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "65xeaTbgIWct82zDb_tXs",
+  "createdAt": "2026-11-26T08:38:14.354Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 55,
+  "battleRound": 11,
+  "actionId": "3tMv0YG_Bagu7JCNyBEUg",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Aura: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member gains temporary access to additional actions for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will absorb up to 35% damage and convert it to Health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "ySr-fEJFXAVef6qIfjlLo",
+  "createdAt": "2026-11-26T08:37:42.115Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 54,
+  "battleRound": 10,
+  "actionId": "rCmgi5gtJb-wnPfuwruI2",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "First Chakra Gate: [flavour text trimmed] on <b>D9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "wumvworotlyStdT2nkCzB",
+  "createdAt": "2026-11-26T08:37:40.249Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 53,
+  "battleRound": 10,
+  "actionId": "ClfVYHX15l9LiMfJ8SFCg",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Kaze Kama: [flavour text trimmed] on <b>H8</b>",
+  "appliedEffects": [
+   {
+    "txt": "Barrier takes 352.58 damage and has 197.42 health left.",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless will steal 35% damage as health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "CXVef9VsbKYwQxeCEGN9g",
+  "createdAt": "2026-11-26T08:37:35.276Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 52,
+  "battleRound": 10,
+  "actionId": "move",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Move: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "7qzNrypvHZ_o1YSN4Ezpo",
+  "createdAt": "2026-11-26T08:37:31.361Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 51,
+  "battleRound": 10,
+  "actionId": "i4lGrYY5HNN2Q2GPToKUS",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Adamantine Fortress: [flavour text trimmed] on <b>H9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage taken [all damage] is decreased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "7D78xDShDEOoeldiIjnZI",
+  "createdAt": "2026-11-26T08:37:27.520Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 50,
+  "battleRound": 10,
+  "actionId": "1EAnfNgpjSG3YR5LDNsrA",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Intent: [flavour text trimmed] on <b>D9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will take 35% of damage received as afterburn for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will recoil 40% damage for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "xiPbTrOaqA5XtHfX2bRCA",
+  "createdAt": "2026-11-26T08:37:24.376Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 49,
+  "battleRound": 10,
+  "actionId": "move",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Move: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member takes 221.00 wound damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member loses 145.00 HP to drain",
+    "color": "purple"
+   },
+   {
+    "txt": "ANBU Member loses 0.00 CP to drain",
+    "color": "purple"
+   },
+   {
+    "txt": "ANBU Member loses 0.00 SP to drain",
+    "color": "purple"
+   }
+  ]
+ },
+ {
+  "id": "7yPnyUu6VTBe7PorWjFoM",
+  "createdAt": "2026-11-26T08:37:00.518Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 48,
+  "battleRound": 9,
+  "actionId": "i4lGrYY5HNN2Q2GPToKUS",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Adamantine Fortress: [flavour text trimmed] on <b>E9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "InPkNma3EpaENrRXszO2_",
+  "createdAt": "2026-11-26T08:36:58.317Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 47,
+  "battleRound": 9,
+  "actionId": "dXOjSl1vNp5G5BsFrNPkh",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Quintessential Flake: [flavour text trimmed] on <b>D9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "Do53RJRf7MlohoMONeoiy",
+  "createdAt": "2026-11-26T08:36:56.131Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 46,
+  "battleRound": 9,
+  "actionId": "CbUq--UpWnawD_7Xk_GCV",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Stamina Pill II: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is increased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "3YpY_7AB5K7QAJBe_REn_",
+  "createdAt": "2026-11-26T08:36:49.100Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 45,
+  "battleRound": 9,
+  "actionId": "MQ5mJqH-5MkQdtLGSZ5nb",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Hemathorn: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 10% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 677.73 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Earth"
+    ]
+   },
+   {
+    "txt": "dauntless absorbs 34.00 damage and converts it to health",
+    "color": "green"
+   },
+   {
+    "txt": "ANBU Member heals 200 HP",
+    "color": "green"
+   },
+   {
+    "txt": "ANBU Member heals 0 SP",
+    "color": "green"
+   },
+   {
+    "txt": "ANBU Member heals 0 CP",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "RukG0SRKvc-HbYoU_w9SJ",
+  "createdAt": "2026-11-26T08:36:44.215Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 44,
+  "battleRound": 9,
+  "actionId": "clear",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Clear: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless was cleared of all positive status effects. ",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 221.00 wound damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member loses 145.00 HP to drain",
+    "color": "purple"
+   },
+   {
+    "txt": "ANBU Member loses 0.00 CP to drain",
+    "color": "purple"
+   },
+   {
+    "txt": "ANBU Member loses 0.00 SP to drain",
+    "color": "purple"
+   }
+  ]
+ },
+ {
+  "id": "lF-vts_2K_kx6tvU9lxFe",
+  "createdAt": "2026-11-26T08:36:25.740Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 43,
+  "battleRound": 8,
+  "actionId": "8-JfO5cZX_n6rfnCTF2jW",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "The Blue Blade: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member will be drained 145 of Health for 2 rounds for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [Earth, Ice, None, Water, Wind damage] is increased by up to 25% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 484.10 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Ice"
+    ]
+   },
+   {
+    "txt": "dauntless takes 129.00 recoil damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member takes 145.00 afterburn damage",
+    "color": "red"
+   }
+  ]
+ },
+ {
+  "id": "5OZXFqBfv9qVrFSaVEeIg",
+  "createdAt": "2026-11-26T08:36:03.695Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 42,
+  "battleRound": 8,
+  "actionId": "bxIPWiqiEaCmPYfAysB5a",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Blue Crimson: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 31.4% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will take 221.00 wound damage for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 704.84 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Ice"
+    ]
+   },
+   {
+    "txt": "dauntless takes 188.00 recoil damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member takes 211.00 afterburn damage",
+    "color": "red"
+   }
+  ]
+ },
+ {
+  "id": "4X8ZgYZTyQElQey1mkR44",
+  "createdAt": "2026-11-26T08:35:53.591Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 41,
+  "battleRound": 8,
+  "actionId": "e2eC-x4UXc5m6QexNbx8w",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Chakra Overflow: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "dPwHAX9yby1qiLM4drPZC",
+  "createdAt": "2026-11-26T08:35:49.873Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 40,
+  "battleRound": 8,
+  "actionId": "MzPdazALBQiLZALMbvCHw",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Phantom Gale: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless will recoil 26.8% damage for 3 rounds, starting this round",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 547.39 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Wind"
+    ]
+   },
+   {
+    "txt": "dauntless absorbs 28.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "dY17UuMp_zZH0rRnsxfoF",
+  "createdAt": "2026-11-26T08:35:34.280Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 39,
+  "battleRound": 7,
+  "actionId": "e2eC-x4UXc5m6QexNbx8w",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Chakra Overflow: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "NVDz05hMfHBUyqDsWl_dT",
+  "createdAt": "2026-11-26T08:35:32.846Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 38,
+  "battleRound": 7,
+  "actionId": "clear",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Clear: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member was cleared of all positive status effects. ",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "VX7brG9YZTETjIh7izKJQ",
+  "createdAt": "2026-11-26T08:35:16.430Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 37,
+  "battleRound": 7,
+  "actionId": "jELEiw5W3N4m2R3oJm3Pk",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Subaku Palace: [flavour text trimmed] on <b>L7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member marked the ground with decreasedamagegiven for the next 3 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 25% for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "UEDbswDFMSvjIKErsKSUo",
+  "createdAt": "2026-11-26T08:34:55.597Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 36,
+  "battleRound": 7,
+  "actionId": "CTYkpwuoqS9mJkOB3Lm8U",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Stone of the Withering: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member's shield was destroyed",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member will steal 35% damage as health for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 1084.38 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Earth"
+    ]
+   },
+   {
+    "txt": "dauntless absorbs 55.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "nt50S7kqvNwHX95_nKAFH",
+  "createdAt": "2026-11-26T08:34:30.572Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 35,
+  "battleRound": 6,
+  "actionId": "dY00WA51Mr7-uS6zbcS3r",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Elemental Kunai: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member's shield was destroyed",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member's shield absorbs 188.11 damage. 25.89 remaining.",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless's shield absorbs 25.89 damage and is destroyed",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member takes 0.00 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Lightning"
+    ]
+   },
+   {
+    "txt": "dauntless takes 23.11 reflect damage",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless steals 75.00 damage as health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "DDTCJNXlp9cNXHNJ2XY0_",
+  "createdAt": "2026-11-26T08:34:14.043Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 34,
+  "battleRound": 6,
+  "actionId": "GiKpip6NxsC8QWlZi6l_R",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Shrapnel Clone Barrage: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member will take 30% of damage received as afterburn for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member's shield absorbs 268.00 damage and is destroyed",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member takes 713.75 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "None"
+    ]
+   },
+   {
+    "txt": "dauntless takes 259.00 reflect damage",
+    "color": "red"
+   },
+   {
+    "txt": "dauntless steals 392.00 damage as health",
+    "color": "green"
+   },
+   {
+    "txt": "ANBU Member siphons 214 damage as a shield for 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "Zs4_PMlza9La1fPR5kU9U",
+  "createdAt": "2026-11-26T08:34:12.303Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 33,
+  "battleRound": 6,
+  "actionId": "replacementTechnique",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Replacement Technique: [flavour text trimmed] on <b>I9</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "L5pu5ZRGpuVslVpOzAERl",
+  "createdAt": "2026-11-26T08:33:41.501Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 32,
+  "battleRound": 6,
+  "actionId": "m6KFrBr3sNwSfYjFPqVpr",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Energy: [flavour text trimmed] on <b>J9</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "iY76TVuwudIUAtNUSOoCZ",
+  "createdAt": "2026-11-26T08:33:37.624Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 31,
+  "battleRound": 6,
+  "actionId": "DIveDAYAb_4uNUaaSXnRJ",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Thunderstrike Blade: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member will reflect 26.4% damage for 3 rounds, starting this round",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 463.24 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Lightning"
+    ]
+   },
+   {
+    "txt": "ANBU Member steals 185.00 damage as health",
+    "color": "green"
+   },
+   {
+    "txt": "dauntless absorbs 24.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "xPj-A0PIFeTsBQiAqNG34",
+  "createdAt": "2026-11-26T08:33:09.910Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 30,
+  "battleRound": 5,
+  "actionId": "jELEiw5W3N4m2R3oJm3Pk",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Subaku Palace: [flavour text trimmed] on <b>D5</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless marked the ground with decreasedamagegiven for the next 3 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is decreased by up to 25% for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "ji0JtfCYIn4g7OPzbgMJi",
+  "createdAt": "2026-11-26T08:33:05.891Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 29,
+  "battleRound": 5,
+  "actionId": "TFRsEeV-VacukUUop-dtN",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Blade Resonance: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage taken [Earth, Ice, None, Water, Wind damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 895.04 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Ice"
+    ]
+   },
+   {
+    "txt": "dauntless steals 358.00 damage as health",
+    "color": "green"
+   },
+   {
+    "txt": "ANBU Member siphons 268 damage as a shield for 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "0os7B9c2g1oeLc1vpnS9e",
+  "createdAt": "2026-11-26T08:32:43.772Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 28,
+  "battleRound": 5,
+  "actionId": "I-8fIrsXs8D4Mn_Q9N66j",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Chains: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member gains temporary access to additional actions for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage taken [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "2BDMvd9e0a-rr2nboG7Bo",
+  "createdAt": "2026-11-26T08:32:28.908Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 27,
+  "battleRound": 5,
+  "actionId": "cleanse",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cleanse: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member was cleared of all negative status effects. ",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "srti41p_hvNJ2c8yvaTu-",
+  "createdAt": "2026-11-26T08:32:02.722Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 26,
+  "battleRound": 4,
+  "actionId": "mlCQd6nbegRsYiO28cTPp",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Paper Bombs: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage taken [all damage] is increased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will take 20% of damage received as afterburn for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "Jz6Y3A7nwGuKrotzfV9Qa",
+  "createdAt": "2026-11-26T08:31:58.317Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 25,
+  "battleRound": 4,
+  "actionId": "0tPhVC7G21Ej99YSICtJO",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Arctic Frost: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [Earth, Ice, None, Water, Wind damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will steal 40% damage as health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "ZzEDBoj7ULbX9aV_U6_q4",
+  "createdAt": "2026-11-26T08:31:56.887Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 24,
+  "battleRound": 4,
+  "actionId": "gIEy7THAZdXgcak5zs5U6",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Sapphire Command: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member cannot be moved any further",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "wo8_v8TS0rdCXZsGDdEew",
+  "createdAt": "2026-11-26T08:31:22.493Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 23,
+  "battleRound": 4,
+  "actionId": "_bkzXaAtTJRF3xVFMC2_1",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Ascension: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member will siphon 30% of damage taken into shields for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will steal 40% damage as health for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 203.04 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "None"
+    ]
+   },
+   {
+    "txt": "dauntless absorbs 83.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "e-pZFfVuh5GcpSkfOECK0",
+  "createdAt": "2026-11-26T08:31:15.512Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 22,
+  "battleRound": 4,
+  "actionId": "GAyHRgaa1lkYGhE9WxlRL",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Phantom Step: [flavour text trimmed] on <b>E7</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member marked the ground with decreasedamagetaken for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "C0dzbmaWRr6s_6TyQROSn",
+  "createdAt": "2026-11-26T08:30:49.475Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 21,
+  "battleRound": 3,
+  "actionId": "rCmgi5gtJb-wnPfuwruI2",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "First Chakra Gate: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 30% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "Lhnt_t9KGvWdJjWGrOj4d",
+  "createdAt": "2026-11-26T08:30:36.222Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 20,
+  "battleRound": 3,
+  "actionId": "cleanse",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Cleanse: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless was cleared of all negative status effects. ",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "LfqTTCr7FK2BDz5UlO3Vb",
+  "createdAt": "2026-11-26T08:30:30.717Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 19,
+  "battleRound": 3,
+  "actionId": "move",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Move: [flavour text trimmed] on <b>E3</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "beSVAASTRSVBPtKLad90-",
+  "createdAt": "2026-11-26T08:30:27.169Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 18,
+  "battleRound": 3,
+  "actionId": "yVNeLzxHSFkNpTPnlm7yQ",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Bloodthorn Kunai: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless will take 25.00 wound damage for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 168.87 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "Earth"
+    ]
+   },
+   {
+    "txt": "dauntless takes 59.00 afterburn damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member steals 33.00 damage as health",
+    "color": "green"
+   },
+   {
+    "txt": "dauntless absorbs 69.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "2kQmDCSN7wyLuJwhXUswi",
+  "createdAt": "2026-11-26T08:30:17.816Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 17,
+  "battleRound": 3,
+  "actionId": "s7N7lscmjufkDPNd9CgEA",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Gravity: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless is stunned [-20 AP] for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless takes 379.96 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "None"
+    ]
+   },
+   {
+    "txt": "dauntless takes 132.00 afterburn damage",
+    "color": "red"
+   },
+   {
+    "txt": "ANBU Member steals 75.00 damage as health",
+    "color": "green"
+   },
+   {
+    "txt": "dauntless absorbs 152.00 damage and converts it to health",
+    "color": "green"
+   }
+  ]
+ },
+ {
+  "id": "SEe4FQObrlGb6ChstXp9y",
+  "createdAt": "2026-11-26T08:30:09.514Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 16,
+  "battleRound": 3,
+  "actionId": "move",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Move: [flavour text trimmed] on <b>E4</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "_yLaBieDPuocJeMZ1-Eak",
+  "createdAt": "2026-11-26T08:29:56.940Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 15,
+  "battleRound": 2,
+  "actionId": "rsc2uO5QuffXzejfhwF_F",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Panacea: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 25% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "Xm0iviDaxpCr9oh9EUM5T",
+  "createdAt": "2026-11-26T08:29:54.454Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 14,
+  "battleRound": 2,
+  "actionId": "dXOjSl1vNp5G5BsFrNPkh",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Quintessential Flake: [flavour text trimmed] on <b>D7</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "K83oPjr0gPyO4ek_gg_JV",
+  "createdAt": "2026-11-26T08:29:31.524Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 13,
+  "battleRound": 2,
+  "actionId": "g-b0Fs5o8EzQIphq0YIAX",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Seal of Nullification: [flavour text trimmed] on <b>E3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member cannot be buffed for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless cannot be debuffed for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "6d6RXN3bdYQKja5MyiXRK",
+  "createdAt": "2026-11-26T08:29:24.178Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 12,
+  "battleRound": 2,
+  "actionId": "6DnJn4x6LWWXtBu7UZybb",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Dr. Kim's Miracle Potion: [flavour text trimmed] on <b>E3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member cannot be cleared for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member cannot be debuffed for the next 1 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "i2RQvl7Pbqv8aniF_qDc7",
+  "createdAt": "2026-11-26T08:29:18.208Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 11,
+  "battleRound": 2,
+  "actionId": "0nIgI7oNn-PSesn8T8kGl",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Inferno Leech: [flavour text trimmed] on <b>D2</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless will be drained 300 of Health for 2 rounds for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will absorb up to 30% damage and convert it to Health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "3dCbIzlHInjGWN5BHotS7",
+  "createdAt": "2026-11-26T08:29:13.605Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 10,
+  "battleRound": 2,
+  "actionId": "replacementTechnique",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Replacement Technique: [flavour text trimmed] on <b>E3</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "GTka01UEDf-AfPksZ01Zw",
+  "createdAt": "2026-11-26T08:28:33.777Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 9,
+  "battleRound": 1,
+  "actionId": "move",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Move: [flavour text trimmed] on <b>D2</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "UjBj57eL68gJ5jKQiQNuc",
+  "createdAt": "2026-11-26T08:28:31.313Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 8,
+  "battleRound": 1,
+  "actionId": "K0t6Z-Q4lau1jFt8Tkpot",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Ethereal Rebirth: [flavour text trimmed] on <b>I3</b>",
+  "appliedEffects": [
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will absorb up to 35% damage and convert it to Health for the next 3 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member takes 637.49 damage",
+    "color": "red",
+    "types": [
+     "damage",
+     "Highest",
+     "None"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "5ilzyEm-WKpkSFQHEKebC",
+  "createdAt": "2026-11-26T08:28:30.139Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 7,
+  "battleRound": 1,
+  "actionId": "move",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Move: [flavour text trimmed] on <b>E3</b>",
+  "appliedEffects": []
+ },
+ {
+  "id": "GtI9N3XEILJwecVuRYrPz",
+  "createdAt": "2026-11-26T08:28:15.249Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 6,
+  "battleRound": 1,
+  "actionId": "TtYPd-LcXKeK3sMuhq1TP",
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "description": "Elite Smoke Bomb: [flavour text trimmed] on <b>I3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage given [all damage] is decreased by up to 70% for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage given [all damage] is decreased by up to 70% for the next 1 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless damage taken [all damage] is decreased by up to 25% for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "plrHrlxcNtBCgjyyOOfGD",
+  "createdAt": "2026-11-26T08:27:40.398Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 5,
+  "battleRound": 1,
+  "actionId": "tZTvqYWiAc_OrY64nDvIo",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Chakra Pill: [flavour text trimmed] on <b>I3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 15% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will steal 20% damage as health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "BcfdtDRg1wBGihX-OKwlU",
+  "createdAt": "2026-11-26T08:27:32.625Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 4,
+  "battleRound": 1,
+  "actionId": "3tMv0YG_Bagu7JCNyBEUg",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Aura: [flavour text trimmed] on <b>I3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member gains temporary access to additional actions for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member damage taken [all damage] is decreased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "ANBU Member will absorb up to 35% damage and convert it to Health for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ },
+ {
+  "id": "4WmoIotJsKF9ifENBsr37",
+  "createdAt": "2026-11-26T08:27:26.049Z",
+  "battleId": "cYlLV24zfgzJ2mqCxlKn7",
+  "battleVersion": 3,
+  "battleRound": 1,
+  "actionId": "1EAnfNgpjSG3YR5LDNsrA",
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "description": "Cosmic Intent: [flavour text trimmed] on <b>D3</b>",
+  "appliedEffects": [
+   {
+    "txt": "ANBU Member damage given [all damage] is increased by up to 35% for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will take 35% of damage received as afterburn for the next 2 rounds",
+    "color": "blue"
+   },
+   {
+    "txt": "dauntless will recoil 40% damage for the next 2 rounds",
+    "color": "blue"
+   }
+  ]
+ }
+]

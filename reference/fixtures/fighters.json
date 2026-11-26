@@ -1,0 +1,18 @@
+[
+ {
+  "userId": "user_2Xip23c233G7m5JO98pFII2YdtW",
+  "name": "ANBU Member",
+  "startHp": 5050,
+  "maxHp": 5050,
+  "startTile": "I3",
+  "side": "red"
+ },
+ {
+  "userId": "user_37qazcrgUPldBPI65bb25DQiCjz",
+  "name": "dauntless",
+  "startHp": 5050,
+  "maxHp": 5050,
+  "startTile": "D3",
+  "side": "blue"
+ }
+]
